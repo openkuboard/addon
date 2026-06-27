@@ -1,0 +1,28 @@
+[
+  {
+    "id": "system-monitor.addons.openkuboard.github.io",
+    "name": "K8S 资源监控套件",
+    "version": "1.0.0",
+    "lastUpdate": "2026-06-27",
+    "maintainer": "devops",
+    "isGlobal": true,
+    "url": "https://raw.githubusercontent.com/openkuboard/addon/main/system-monitor.addons.openkuboard.github.io/1.0.0/addon.json",
+    "info": {
+      "description": "基于 Prometheus/Grafana 提供 Kubernetes 集群资源监控能力，适配 Kubernetes 1.35。",
+      "document": "https://github.com/openkuboard/addon/blob/main/system-monitor.addons.openkuboard.github.io/1.0.0/README.md"
+    }
+  },
+  {
+    "id": "pv-browser.addons.openkuboard.github.io",
+    "name": "存储卷浏览器",
+    "version": "v3.0.1",
+    "lastUpdate": "2026-06-27",
+    "maintainer": "devops",
+    "isGlobal": true,
+    "url": "https://raw.githubusercontent.com/openkuboard/addon/main/pv-browser.addons.openkuboard.github.io/v3.0.1/addon.json",
+    "info": {
+      "description": "通过浏览器直接查看并管理 Kubernetes 持久化存储卷中的文件。",
+      "document": "https://github.com/openkuboard/addon/blob/main/pv-browser.addons.openkuboard.github.io/v3.0.1/README.md"
+    }
+  }
+]

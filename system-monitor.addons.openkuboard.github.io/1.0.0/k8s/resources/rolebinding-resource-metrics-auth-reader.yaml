@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  # kube-system ns 内 RoleBinding 与 Kuboard 套件同名会互相覆盖，加 -{{MONITOR_NAMESPACE}} 后缀。
+  # roleRef 指向 K8s 内置 Role extension-apiserver-authentication-reader，保持原名。
+  name: resource-metrics-auth-reader-{{MONITOR_NAMESPACE}}
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: extension-apiserver-authentication-reader
+subjects:
+- kind: ServiceAccount
+  name: prometheus-adapter
+  namespace: {{MONITOR_NAMESPACE}}

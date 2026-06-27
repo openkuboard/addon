@@ -1,0 +1,102 @@
+{
+  "prometheus_url": "http://127.0.0.1:8000/api/cluster/proxy/${KUBERNETES_CLUSTER}/api/v1/namespaces/{{MONITOR_NAMESPACE}}/services/http:prometheus-k8s:9090/proxy/",
+  "email": {
+    "enabled": false,
+    "smtp_host": "",
+    "smtp_port": "465",
+    "username": "",
+    "password": "",
+    "use_tls": true,
+    "from": "",
+    "from_name": "DevOPS Alert"
+  },
+  "wechat": {
+    "enabled": false,
+    "api_url": "",
+    "corp_id": "",
+    "api_secret": ""
+  },
+  "dingtalk": {
+    "enabled": false,
+    "webhook_url": ""
+  },
+  "contact_groups": [
+    {
+      "name": "Default",
+      "email_contacts": [],
+      "wechat_contacts": [],
+      "dingtalk_robots": [],
+      "webhooks": []
+    },
+    {
+      "name": "Watchdog",
+      "email_contacts": [],
+      "wechat_contacts": [],
+      "dingtalk_robots": [],
+      "webhooks": []
+    },
+    {
+      "name": "Critical",
+      "email_contacts": [],
+      "wechat_contacts": [],
+      "dingtalk_robots": [],
+      "webhooks": []
+    }
+  ],
+  "routes": {
+    "receiver": "Default",
+    "group_by": [
+      "namespace"
+    ],
+    "group_wait": "30s",
+    "group_interval": "5m",
+    "repeat_interval": "12h",
+    "routes": [
+      {
+        "receiver": "Watchdog",
+        "match": {
+          "alertname": "Watchdog"
+        },
+        "routes": []
+      },
+      {
+        "receiver": "Critical",
+        "match": {
+          "severity": "critical"
+        },
+        "routes": []
+      }
+    ]
+  },
+  "inhibit_rules": [
+    {
+      "equal": [
+        "namespace",
+        "alertname"
+      ],
+      "source_match": {
+        "severity": "critical"
+      },
+      "target_match_re": {
+        "severity": "warning|info"
+      }
+    },
+    {
+      "equal": [
+        "namespace",
+        "alertname"
+      ],
+      "source_match": {
+        "severity": "warning"
+      },
+      "target_match_re": {
+        "severity": "info"
+      }
+    }
+  ],
+  "message_templates": {
+    "email": "{{ define \"email.default.subject\" }}[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}{{ end }}\n\n{{ define \"email.default.html\" }}\n<!DOCTYPE html>\n<html>\n<body>\n{{- if gt (len .Alerts.Firing) 0 -}}\n<h3>告警触发</h3>\n{{- range $index, $alert := .Alerts.Firing -}}\n<p>\n<b>告警类型:</b> {{ $alert.Labels.alertname }}<br/>\n<b>告警级别:</b> {{ $alert.Labels.severity }}<br/>\n<b>告警详情:</b> {{ $alert.Annotations.message }}<br/>\n<b>故障时间:</b> {{ $alert.StartsAt.Format \"2006-01-02 15:04:05\" }}<br/>\n{{- if $alert.Labels.instance -}}<b>故障实例:</b> {{ $alert.Labels.instance }}<br/>{{- end -}}\n{{- if $alert.Labels.namespace -}}<b>命名空间:</b> {{ $alert.Labels.namespace }}<br/>{{- end -}}\n</p>\n<hr/>\n{{- end -}}\n{{- end -}}\n{{- if gt (len .Alerts.Resolved) 0 -}}\n<h3>告警恢复</h3>\n{{- range $index, $alert := .Alerts.Resolved -}}\n<p>\n<b>告警类型:</b> {{ $alert.Labels.alertname }}<br/>\n<b>告警级别:</b> {{ $alert.Labels.severity }}<br/>\n<b>告警详情:</b> {{ $alert.Annotations.message }}<br/>\n<b>恢复时间:</b> {{ $alert.EndsAt.Format \"2006-01-02 15:04:05\" }}<br/>\n</p>\n<hr/>\n{{- end -}}\n{{- end -}}\n</body>\n</html>\n{{ end }}",
+    "wechat": "{{ define \"wechat.default.message\" }}\n{{- if gt (len .Alerts.Firing) 0 -}}\n{{- range $index, $alert := .Alerts -}}\n{{- if eq $index 0 -}}\n==========\n告警类型: {{ $alert.Labels.alertname }}\n告警级别: {{ $alert.Labels.severity }}\n\n{{- end }}\n*****告警详情*****\n告警详情: {{ $alert.Annotations.message }}\n故障时间: {{ $alert.StartsAt.Format \"2006-01-02 15:04:05\" }}\n*****参考信息*****\n{{ if gt (len $alert.Labels.instance) 0 -}}故障实例ip: {{ $alert.Labels.instance }};{{- end -}}\n{{- if gt (len $alert.Labels.namespace) 0 -}}故障实例所在namespace: {{ $alert.Labels.namespace }};{{- end -}}\n{{- if gt (len $alert.Labels.node) 0 -}}故障物理机ip: {{ $alert.Labels.node }};{{- end -}}\n{{- if gt (len $alert.Labels.pod_name) 0 -}}故障pod名称: {{ $alert.Labels.pod_name }}{{- end -}}\n====================\n{{- end }}\n{{- end }}\n\n{{- if gt (len .Alerts.Resolved) 0 -}}\n{{- range $index, $alert := .Alerts -}}\n{{- if eq $index 0 -}}\n==========\n告警类型: {{ $alert.Labels.alertname }}\n告警级别: {{ $alert.Labels.severity }}\n\n{{- end }}\n*****告警详情*****\n告警详情: {{ $alert.Annotations.message }}\n故障时间: {{ $alert.StartsAt.Format \"2006-01-02 15:04:05\" }}\n恢复时间: {{ $alert.EndsAt.Format \"2006-01-02 15:04:05\" }}\n====================\n{{- end }}\n{{- end }}\n{{- end }}",
+    "dingtalk": "{{ define \"dingtalk.default.message\" }}\n{{- if gt (len .Alerts.Firing) 0 -}}\n{{- range $index, $alert := .Alerts -}}\n{{- if eq $index 0 -}}\n==========\n告警类型: {{ $alert.Labels.alertname }}\n告警级别: {{ $alert.Labels.severity }}\n\n{{- end }}\n*****告警详情*****\n告警详情: {{ $alert.Annotations.message }}\n故障时间: {{ $alert.StartsAt.Format \"2006-01-02 15:04:05\" }}\n*****参考信息*****\n{{ if gt (len $alert.Labels.instance) 0 -}}故障实例ip: {{ $alert.Labels.instance }};{{- end -}}\n{{- if gt (len $alert.Labels.namespace) 0 -}}故障实例所在namespace: {{ $alert.Labels.namespace }};{{- end -}}\n{{- if gt (len $alert.Labels.node) 0 -}}故障物理机ip: {{ $alert.Labels.node }};{{- end -}}\n{{- if gt (len $alert.Labels.pod_name) 0 -}}故障pod名称: {{ $alert.Labels.pod_name }}{{- end -}}\n====================\n{{- end }}\n{{- end }}\n\n{{- if gt (len .Alerts.Resolved) 0 -}}\n{{- range $index, $alert := .Alerts -}}\n{{- if eq $index 0 -}}\n==========\n告警类型: {{ $alert.Labels.alertname }}\n告警级别: {{ $alert.Labels.severity }}\n\n{{- end }}\n*****告警详情*****\n告警详情: {{ $alert.Annotations.message }}\n故障时间: {{ $alert.StartsAt.Format \"2006-01-02 15:04:05\" }}\n恢复时间: {{ $alert.EndsAt.Format \"2006-01-02 15:04:05\" }}\n====================\n{{- end }}\n{{- end }}\n{{- end }}"
+  }
+}

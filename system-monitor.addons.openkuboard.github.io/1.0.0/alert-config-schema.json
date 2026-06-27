@@ -1,0 +1,238 @@
+{
+  "helpUrl": "https://openkuboard.github.io/install/install-system-monitor.html",
+  "helpLabel": "如何配置告警参数？",
+  "footnote": "保存后写入套件 manifest；套件已安装时同步 Alertmanager Secret。",
+  "tabs": [
+    {
+      "id": "interface",
+      "label": "接口参数",
+      "kind": "form",
+      "sections": [
+        {
+          "title": "Prometheus URL",
+          "fields": [
+            {
+              "path": "prometheus_url",
+              "label": "Prometheus URL",
+              "type": "text",
+              "placeholder": "http://.../prometheus-k8s:9090/proxy/"
+            }
+          ]
+        },
+        {
+          "title": "邮件发送接口",
+          "fields": [
+            {
+              "path": "email.smtp_host",
+              "label": "smtp 邮件服务器地址",
+              "type": "text",
+              "placeholder": "smtp.qq.com:465",
+              "default": ""
+            },
+            {
+              "path": "email.username",
+              "label": "邮箱账号",
+              "type": "text",
+              "placeholder": "xxxxx@qq.com",
+              "default": ""
+            },
+            {
+              "path": "email.password",
+              "label": "邮箱密码",
+              "type": "password",
+              "placeholder": "授权码或密码",
+              "default": ""
+            },
+            {
+              "path": "email.use_tls",
+              "label": "开启 TLS",
+              "type": "switch",
+              "default": true,
+              "inline": true
+            },
+            {
+              "path": "email.from_name",
+              "label": "发件人信息",
+              "type": "text",
+              "placeholder": "DevOPS Alert",
+              "default": "DevOPS Alert"
+            }
+          ]
+        },
+        {
+          "title": "微信推送接口",
+          "fields": [
+            {
+              "path": "wechat.api_url",
+              "label": "微信接口地址",
+              "type": "text",
+              "placeholder": "https://qyapi.weixin.qq.com/cgi-bin/",
+              "default": "https://qyapi.weixin.qq.com/cgi-bin/"
+            },
+            {
+              "path": "wechat.corp_id",
+              "label": "微信企业ID",
+              "type": "text",
+              "default": ""
+            },
+            {
+              "path": "wechat.api_secret",
+              "label": "API Secret",
+              "type": "password",
+              "default": ""
+            }
+          ]
+        },
+        {
+          "title": "钉钉推送接口",
+          "fields": [
+            {
+              "path": "dingtalk.enabled",
+              "label": "启用钉钉推送",
+              "type": "switch",
+              "default": false,
+              "inline": true,
+              "activeText": "已启用",
+              "inactiveText": "未启用"
+            },
+            {
+              "path": "dingtalk.webhook_url",
+              "label": "Webhook URL",
+              "type": "text",
+              "placeholder": "https://oapi.dingtalk.com/robot/send?access_token=...",
+              "default": "",
+              "showWhen": { "path": "dingtalk.enabled", "equals": true }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contacts",
+      "label": "联系人组",
+      "kind": "contact_groups",
+      "path": "contact_groups",
+      "hint": "先在此处定义联系人分组，然后可以在 告警路由设置 中决定将什么样的告警消息发送给哪一个联系人分组。",
+      "addGroupLabel": "+ 添加联系人分组",
+      "contactGroupChannels": {
+        "email": {
+          "label": "邮件联系人",
+          "field": "email_contacts",
+          "type": "tags",
+          "requiresInterface": "email.smtp_host",
+          "setupHint": "如果想要使用邮件发送告警通知，请先 设置接口参数",
+          "setupActionLabel": "设置接口参数",
+          "setupTab": "interface"
+        },
+        "wechat": {
+          "label": "微信联系人",
+          "field": "wechat_contacts",
+          "type": "tags",
+          "requiresInterface": "wechat.corp_id",
+          "setupHint": "如果想要使用微信发送告警通知，请先 设置接口参数",
+          "setupActionLabel": "设置接口参数",
+          "setupTab": "interface"
+        },
+        "dingtalk": {
+          "label": "钉钉机器人",
+          "field": "dingtalk_robots",
+          "type": "webhook_list",
+          "addLabel": "+ 添加钉钉机器人",
+          "namePlaceholder": "机器人名称（可选）",
+          "urlPlaceholder": "https://oapi.dingtalk.com/robot/send?access_token=..."
+        },
+        "webhook": {
+          "label": "WebHook",
+          "field": "webhooks",
+          "type": "webhook_list",
+          "addLabel": "+ 添加 Webhook",
+          "namePlaceholder": "名称（可选）",
+          "urlPlaceholder": "https://example.com/hooks/alert"
+        }
+      },
+      "default": [
+        {
+          "name": "Default",
+          "email_contacts": [],
+          "wechat_contacts": [],
+          "dingtalk_robots": [],
+          "webhooks": []
+        },
+        {
+          "name": "Watchdog",
+          "email_contacts": [],
+          "wechat_contacts": [],
+          "dingtalk_robots": [],
+          "webhooks": []
+        },
+        {
+          "name": "Critical",
+          "email_contacts": [],
+          "wechat_contacts": [],
+          "dingtalk_robots": [],
+          "webhooks": []
+        }
+      ]
+    },
+    {
+      "id": "routes",
+      "label": "告警路由",
+      "kind": "alert_routes",
+      "path": "routes",
+      "receiverPath": "contact_groups",
+      "docsTitle": "告警路由规则说明",
+      "docsContent": "告警路由定义告警信息如何按条件发送给联系人组。\n\nAlertmanager 将告警标签组织成树形结构。匹配时按深度优先遍历：若当前节点匹配且 continue 为 false，则停止；否则继续匹配兄弟节点。\n\n请先在「联系人组」中定义接收者，再在此处配置路由树。",
+      "default": {
+        "receiver": "Default",
+        "group_by": ["namespace"],
+        "group_wait": "30s",
+        "group_interval": "5m",
+        "repeat_interval": "12h",
+        "routes": [
+          {
+            "receiver": "Watchdog",
+            "match": { "alertname": "Watchdog" },
+            "routes": []
+          },
+          {
+            "receiver": "Critical",
+            "match": { "severity": "critical" },
+            "routes": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "inhibit",
+      "label": "抑制规则",
+      "kind": "inhibit_rules",
+      "path": "inhibit_rules",
+      "docsTitle": "抑制规则说明",
+      "docsContent": "抑制规则用于避免冗余告警。例如集群故障时抑制大量应用级告警，减少通知疲劳。\n\n当源告警事件与目标告警事件的 Equal 标签完全一致，且分别满足源/目标匹配器时，目标告警将被抑制。",
+      "addRuleLabel": "+ 添加抑制规则",
+      "default": [
+        {
+          "equal": ["namespace", "alertname"],
+          "source_match": { "severity": "critical" },
+          "target_match_re": { "severity": "warning|info" }
+        },
+        {
+          "equal": ["namespace", "alertname"],
+          "source_match": { "severity": "warning" },
+          "target_match_re": { "severity": "info" }
+        }
+      ]
+    },
+    {
+      "id": "templates",
+      "label": "消息模板",
+      "kind": "message_templates",
+      "path": "message_templates",
+      "templateChannels": [
+        { "id": "email", "label": "邮件模板" },
+        { "id": "wechat", "label": "微信模板" },
+        { "id": "dingtalk", "label": "钉钉模板" }
+      ]
+    }
+  ]
+}

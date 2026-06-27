@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    k8s.openkuboard.github.io/ingress: 'false'
+    k8s.openkuboard.github.io/service: none
+    k8s.openkuboard.github.io/workload: kuboard-pv-browser
+  labels:
+    k8s.openkuboard.github.io/layer: monitor
+    k8s.openkuboard.github.io/name: kuboard-pv-browser
+  name: kuboard-pv-browser
+  namespace: openkuboard
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      k8s.openkuboard.github.io/layer: monitor
+      k8s.openkuboard.github.io/name: kuboard-pv-browser
+  template:
+    metadata:
+      labels:
+        k8s.openkuboard.github.io/layer: monitor
+        k8s.openkuboard.github.io/name: kuboard-pv-browser
+    spec:
+      containers:
+        - image: REDACTED-REGISTRY/hub/kuboard-pv-browser:v3.0.1
+          imagePullPolicy: IfNotPresent
+          name: delegator
+          volumeMounts:
+            - mountPath: /var/lib/kubelet
+              name: kubelet
+            - mountPath: /run/mount
+              name: mounts
+        - command:
+            - sleep
+            - '360000'
+          image: REDACTED-REGISTRY/hub/kuboard-pv-browser:v3.0.1
+          imagePullPolicy: IfNotPresent
+          name: pv-browser
+          volumeMounts:
+            - mountPath: /var/lib/kubelet
+              name: kubelet
+            - mountPath: /run/mount
+              name: mounts
+      dnsPolicy: ClusterFirst
+      tolerations:
+        - effect: ''
+          key: node-role.kubernetes.io/master
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - hostPath:
+            path: /var/lib/kubelet
+            type: DirectoryOrCreate
+          name: kubelet
+        - hostPath:
+            path: /run/mount
+            type: DirectoryOrCreate
+          name: mounts

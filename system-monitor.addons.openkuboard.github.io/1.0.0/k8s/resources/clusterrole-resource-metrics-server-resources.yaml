@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  # 加 -{{MONITOR_NAMESPACE}} 后缀避免与 Kuboard 自带套件互相覆盖。
+  name: resource-metrics-server-resources-{{MONITOR_NAMESPACE}}
+rules:
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - '*'
+  verbs:
+  - '*'

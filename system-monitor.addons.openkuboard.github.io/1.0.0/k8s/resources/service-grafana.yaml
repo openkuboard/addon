@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: grafana
+  name: grafana
+  namespace: {{MONITOR_NAMESPACE}}
+  annotations:
+    proxy.openkuboard.github.io/auth-header-groups-3000: X-WEBAUTH-GROUPS
+    proxy.openkuboard.github.io/auth-header-user-3000: X-WEBAUTH-USER
+    proxy.openkuboard.github.io/cookie-ttl-3000: '3600'
+    proxy.openkuboard.github.io/disable-rebase-3000: 'true'
+spec:
+  ports:
+  - name: http
+    port: 3000
+    targetPort: http
+  selector:
+    app: grafana
+  type: NodePort

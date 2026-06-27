@@ -1,0 +1,23 @@
+{
+  "id": "pv-browser.addons.openkuboard.github.io",
+  "name": "存储卷浏览器",
+  "version": "v3.0.1",
+  "lastUpdate": "2026-06-27",
+  "maintainer": "shaohq@foxmail.com",
+  "isGlobal": true,
+  "scripts": ["initialize.js"],
+  "k8s": ["k8s/kuboard-pv-browser.yaml"],
+  "resources": [],
+  "info": {
+    "description": "通过浏览器直接查看并管理 Kubernetes 持久化存储卷中的文件。",
+    "document": "https://www.kuboard.cn/learning/k8s-pv/install-pv-browser.html"
+  },
+  "parameters": {},
+  "quickLinks": [
+    {
+      "title": "容器文件浏览器",
+      "description": "命名空间 → 工作负载 → 容器行「文件」",
+      "level": "container"
+    }
+  ]
+}

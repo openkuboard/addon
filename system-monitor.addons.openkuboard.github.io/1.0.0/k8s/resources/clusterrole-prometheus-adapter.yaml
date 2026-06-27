@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  # 加 -{{MONITOR_NAMESPACE}} 后缀避免与 Kuboard 自带套件互相覆盖。
+  name: prometheus-adapter-{{MONITOR_NAMESPACE}}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  - namespaces
+  - pods
+  - services
+  verbs:
+  - get
+  - list
+  - watch

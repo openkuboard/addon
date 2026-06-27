@@ -1,0 +1,43 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  # default / kube-system 等共享 ns 的 RoleBinding 与 Kuboard 套件同名会互相覆盖，加 ns 后缀。
+  name: prometheus-k8s-{{MONITOR_NAMESPACE}}
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s-{{MONITOR_NAMESPACE}}
+subjects:
+- kind: ServiceAccount
+  name: prometheus-k8s
+  namespace: {{MONITOR_NAMESPACE}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  # MONITOR_NAMESPACE 自身 ns 内 RoleBinding 与 Kuboard 套件不在同一 ns，保留原名。
+  name: prometheus-k8s
+  namespace: {{MONITOR_NAMESPACE}}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s
+subjects:
+- kind: ServiceAccount
+  name: prometheus-k8s
+  namespace: {{MONITOR_NAMESPACE}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-k8s-{{MONITOR_NAMESPACE}}
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s-{{MONITOR_NAMESPACE}}
+subjects:
+- kind: ServiceAccount
+  name: prometheus-k8s
+  namespace: {{MONITOR_NAMESPACE}}

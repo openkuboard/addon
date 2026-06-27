@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  # 加 -{{MONITOR_NAMESPACE}} 后缀避免与 Kuboard 自带套件互相覆盖。
+  # roleRef 指向 K8s 内置 ClusterRole system:auth-delegator，保持原名。
+  name: resource-metrics:system:auth-delegator-{{MONITOR_NAMESPACE}}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: prometheus-adapter
+  namespace: {{MONITOR_NAMESPACE}}

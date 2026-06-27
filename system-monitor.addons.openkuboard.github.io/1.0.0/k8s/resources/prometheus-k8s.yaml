@@ -1,0 +1,51 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  labels:
+    prometheus: k8s
+  name: k8s
+  namespace: {{MONITOR_NAMESPACE}}
+spec:
+  # external_labels.cluster：kube-prometheus 上游 dashboard 假设所有指标带 cluster 标签
+  # （PromQL 全部含 cluster="$cluster" 过滤），这里通过 externalLabels 注入。
+  # 模板变量 cluster = label_values(node_cpu_seconds_total, cluster) 会拿到此值，dashboard
+  # 自动有数据。值取自 KUBERNETES_CLUSTER 参数，允许多集群部署时区分。
+  externalLabels:
+    cluster: {{KUBERNETES_CLUSTER}}
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: {{PROMETHEUS_STORAGE_CLASS}}
+        resources:
+          requests:
+            storage: {{PROMETHEUS_STORAGE_SIZE_PER_VOLUME}}
+  alerting:
+    alertmanagers:
+    - name: alertmanager-main
+      namespace: {{MONITOR_NAMESPACE}}
+      port: web
+  image: REDACTED-REGISTRY/hub/prometheus/prometheus:v2.55.1
+  nodeSelector:
+    kubernetes.io/os: linux
+  podMonitorNamespaceSelector: {}
+  podMonitorSelector: {}
+  probeNamespaceSelector: {}
+  probeSelector: {}
+  replicas: {{PROMETHEUS_REPLICAS}}
+  scrapeInterval: 30s
+  evaluationInterval: 30s
+  resources:
+    requests:
+      memory: 400Mi
+  ruleSelector:
+    matchLabels:
+      prometheus: k8s
+      role: alert-rules
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: prometheus-k8s
+  serviceMonitorNamespaceSelector: {}
+  serviceMonitorSelector: {}
+  version: v2.55.1
