@@ -4,6 +4,19 @@ This repository hosts **addon (套件)** definitions for the [OpenKuboard](https
 
 Addons extend OpenKuboard's UI with context-sensitive buttons (monitoring, file browsing, etc.) and optionally deploy Kubernetes resources into the cluster.
 
+> **🌐 Documentation site:** [https://openkuboard.github.io/addon/](https://openkuboard.github.io/addon/)  
+> **📦 Addon data (raw):** https://raw.githubusercontent.com/openkuboard/addon/main/
+
+---
+
+## Documentation
+
+| Page | Description |
+|------|-------------|
+| [📋 套件总览](https://openkuboard.github.io/addon/) | Available addons with details and links |
+| [📘 开发指南](https://openkuboard.github.io/addon/development) | How to create and publish a new addon |
+| [📐 规范说明](https://openkuboard.github.io/addon/addon-spec) | `addon.json` fields, extension points, repository index |
+
 ---
 
 ## Repository Structure
@@ -23,7 +36,8 @@ addon/
 │       └── k8s/                 # Kubernetes manifests (optional)
 │           ├── *.yaml
 │           └── resources/       # Sub-resources organized by component
-├── docs/                        # Documentation (forthcoming)
+├── docs/                        # Jekyll documentation site (GitHub Pages source)
+├── _config.yml                  # Jekyll config (excludes addon data dirs from build)
 └── README.md                    # This file
 ```
 

@@ -1,3 +1,8 @@
+---
+layout: default
+title: Addon 套件规范
+---
+
 # Addon 套件规范
 
 本文档描述 OpenKuboard 套件（addon）仓库的目录布局与 `addon.json` 字段约定。

@@ -1,0 +1,48 @@
+# Jekyll configuration for the OpenKuboard addon repository GitHub Pages site.
+#
+# This repository is BOTH an addon data source (raw addon.json / k8s manifests that
+# the platform fetches via raw.githubusercontent.com) AND a documentation site.
+# To stop Jekyll/Liquid from parsing addon data files (which contain Prometheus
+# rule expressions like `{{ printf ... }}` that break Liquid), all addon data
+# directories and the index are excluded below.
+
+title: OpenKuboard Addon
+description: >-
+  OpenKuboard 套件（addon）主仓库 —— 套件开发文档与已有套件展示。
+  套件通过 raw URL 为平台提供 addon.json 与 K8s 清单。
+
+# Project-page URL is https://openkuboard.github.io/addon/
+baseurl: "/addon"
+url: "https://openkuboard.github.io"
+
+# GitHub Pages native theme (no extra build deps)
+theme: jekyll-theme-primer
+
+# GFM-style markdown with table support
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Exclude ALL addon data and non-doc files so Liquid never touches them.
+# (resources.yaml contains `{{ printf ... }}` Prometheus rules that break Liquid.)
+exclude:
+  - "index"
+  - "*.addons.openkuboard.github.io"
+  - "*.addons.openkuboard.github.io/**"
+  - "Makefile"
+  - "scripts"
+  - "node_modules"
+  - "vendor"
+  - "Gemfile"
+  - "Gemfile.lock"
+  - "README.md"
+
+# Default layout for documentation pages
+defaults:
+  - scope:
+      path: "docs"
+    values:
+      layout: default
+
+permalink: pretty
