@@ -118,11 +118,11 @@ bundle exec jekyll serve
 # 访问 http://127.0.0.1:4000/addon/
 ```
 
-> 注意：套件数据目录（`*.addons.openkuboard.github.io`、`index/`）已在 `_config.yml` 中通过 `exclude` 排除，Jekyll 不会渲染它们。请勿在套件数据文件中移除 `{{ ... }}` 等 Prometheus 规则表达式——它们是套件正常工作所需。
+> 注意：套件数据目录（`*.addons.openkuboard.github.io`、`index/`）已在 `_config.yml` 中通过 `exclude` 排除，Jekyll 不会渲染它们。请勿在套件数据文件中移除 {% raw %}`{{ ... }}`{% endraw %} 等 Prometheus 规则表达式——它们是套件正常工作所需。
 
 ## 6. 发布注意事项
 
 - **版本目录与 `version` 字段必须一致**
 - **`id` 字段与目录名前缀必须一致**（去掉版本目录后的部分）
 - **raw URL 路径必须准确**：`https://raw.githubusercontent.com/openkuboard/addon/main/<id>/<version>/addon.json`
-- 套件数据文件中的 `{{ }}`、`{% %}` 等 Liquid 语法不会影响平台运行（平台直接读取 raw 文件），但会被 Jekyll 报错——因此务必保持 `_config.yml` 的 exclude 配置
+- 套件数据文件中的 {% raw %}`{{ }}`、`{% %}`{% endraw %} 等 Liquid 语法不会影响平台运行（平台直接读取 raw 文件），但会被 Jekyll 报错——因此务必保持 `_config.yml` 的 exclude 配置
