@@ -25,7 +25,7 @@ spec:
         - --no-collector.wifi
         - --no-collector.hwmon
         - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)
-        image: REDACTED-REGISTRY/hub/prometheus/node-exporter:v1.8.2
+        image: quay.io/prometheus/node-exporter:v1.8.2
         name: node-exporter
         resources:
           limits:
@@ -57,7 +57,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        image: REDACTED-REGISTRY/hub/brancz/kube-rbac-proxy:v0.18.1
+        image: quay.io/brancz/kube-rbac-proxy:v0.18.1
         name: kube-rbac-proxy
         ports:
         - containerPort: {{NODE_EXPORTER_PORT}}

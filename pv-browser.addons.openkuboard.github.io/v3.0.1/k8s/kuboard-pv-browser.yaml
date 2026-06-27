@@ -23,7 +23,7 @@ spec:
         k8s.openkuboard.github.io/name: kuboard-pv-browser
     spec:
       containers:
-        - image: REDACTED-REGISTRY/hub/kuboard-pv-browser:v3.0.1
+        - image: docker.io/eipwork/kuboard-pv-browser:v3.0.1
           imagePullPolicy: IfNotPresent
           name: delegator
           volumeMounts:
@@ -34,7 +34,7 @@ spec:
         - command:
             - sleep
             - '360000'
-          image: REDACTED-REGISTRY/hub/kuboard-pv-browser:v3.0.1
+          image: docker.io/eipwork/kuboard-pv-browser:v3.0.1
           imagePullPolicy: IfNotPresent
           name: pv-browser
           volumeMounts:

@@ -95,7 +95,7 @@
     "PROMETHEUS_STORAGE_SIZE_PER_VOLUME": "20Gi",
     "KUBERNETES_CLUSTER": "default",
     "MONITOR_NAMESPACE": "openkuboard",
-    "MONITOR_IMAGE_REGISTRY": "REDACTED-REGISTRY"
+    "MONITOR_IMAGE_REGISTRY": ""
   },
   "parameterDefs": [
     {
@@ -137,8 +137,8 @@
     {
       "name": "MONITOR_IMAGE_REGISTRY",
       "required": false,
-      "default": "REDACTED-REGISTRY",
-      "description": "内网镜像仓库主机（默认 REDACTED-REGISTRY），组件映射到 hub/<上游路径>。"
+      "default": "",
+      "description": "镜像仓库主机覆盖（默认留空，使用各组件官方公共源 quay.io/registry.k8s.io/docker.io）。若需走内网镜像仓库，填入主机名并自行替换清单中的镜像地址。"
     }
   ],
   "parameterExtraSteps": "<div style=\"font-size: 14px; color: #e6a23c; font-weight: 500\">本套件基于 Kuboard system-monitor v3.0.3 整理，组件版本已升级以适配 Kubernetes 1.35。</div><div style=\"font-size: 14px; color: #e6a23c; font-weight: 500; margin-top: 8px\">工作负载默认部署在 <code>openkuboard</code> 命名空间（可在套件参数中修改 MONITOR_NAMESPACE）；安装前请确认 StorageClass 可用。</div>",

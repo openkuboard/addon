@@ -19,7 +19,7 @@ spec:
         app: grafana
     spec:
       containers:
-      - image: REDACTED-REGISTRY/hub/grafana/grafana:11.4.0
+      - image: docker.io/grafana/grafana:11.4.0
         name: grafana
         env:
           - name: GF_AUTH_PROXY_ENABLED
