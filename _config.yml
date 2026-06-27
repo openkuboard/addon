@@ -26,8 +26,11 @@ kramdown:
 
 # Exclude ALL addon data and non-doc files so Liquid never touches them.
 # (resources.yaml contains `{{ printf ... }}` Prometheus rules that break Liquid.)
+# NOTE: patterns are substring/path matches in Jekyll — use trailing slashes for
+# directories so they don't accidentally match top-level files (e.g. "index" would
+# also exclude index.md).
 exclude:
-  - "index"
+  - "index/"
   - "*.addons.openkuboard.github.io"
   - "*.addons.openkuboard.github.io/**"
   - "Makefile"
