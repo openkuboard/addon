@@ -1,7 +1,12 @@
 ---
 layout: default
 title: 套件总览
+lang: zh
 ---
+
+<p align="right">
+  <a href="/addon/en/">English</a> · 简体中文
+</p>
 
 # OpenKuboard 套件（Addon）
 

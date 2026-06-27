@@ -1,7 +1,12 @@
 ---
 layout: default
 title: 套件开发指南
+lang: zh
 ---
+
+<p align="right">
+  <a href="/addon/en/docs/development/">English</a> · 简体中文
+</p>
 
 # 套件开发指南
 

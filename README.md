@@ -1,11 +1,13 @@
 # OpenKuboard Addon Repository
 
-This repository hosts **addon (套件)** definitions for the [OpenKuboard](https://github.com/openkuboard) platform.
+[English](./README.md) · [简体中文](./README.zh-CN.md)
 
-Addons extend OpenKuboard's UI with context-sensitive buttons (monitoring, file browsing, etc.) and optionally deploy Kubernetes resources into the cluster.
+This repository hosts **addon** definitions for the [OpenKuboard](https://github.com/openkuboard) platform.
 
-> **🌐 Documentation site:** [https://openkuboard.github.io/addon/](https://openkuboard.github.io/addon/)  
-> **📦 Addon data (raw):** https://raw.githubusercontent.com/openkuboard/addon/main/
+Addons extend OpenKuboard's UI with context-sensitive buttons (monitoring, file browsing, etc.) and optionally deploy Kubernetes resources into the cluster. This repository is **both** an addon data source (served via `raw.githubusercontent.com`) and a documentation site (GitHub Pages).
+
+> 🌐 **Documentation site:** [https://openkuboard.github.io/addon/](https://openkuboard.github.io/addon/)  
+> 📦 **Addon data (raw):** https://raw.githubusercontent.com/openkuboard/addon/main/
 
 ---
 
@@ -13,9 +15,11 @@ Addons extend OpenKuboard's UI with context-sensitive buttons (monitoring, file 
 
 | Page | Description |
 |------|-------------|
-| [📋 套件总览](https://openkuboard.github.io/addon/) | Available addons with details and links |
-| [📘 开发指南](https://openkuboard.github.io/addon/docs/development/) | How to create and publish a new addon |
-| [📐 规范说明](https://openkuboard.github.io/addon/docs/addon-spec/) | `addon.json` fields, extension points, repository index |
+| [📋 Addon Overview](https://openkuboard.github.io/addon/) | Available addons with details and links |
+| [📘 Development Guide](https://openkuboard.github.io/addon/docs/development/) | How to create and publish a new addon |
+| [📐 Addon Spec](https://openkuboard.github.io/addon/docs/addon-spec/) | `addon.json` fields, extension points, repository index |
+
+> 中文文档：[README.zh-CN.md](./README.zh-CN.md) · 文档站中文版为默认（[首页](https://openkuboard.github.io/addon/)），英文镜像见 [/en/](https://openkuboard.github.io/addon/en/)
 
 ---
 
@@ -36,7 +40,8 @@ addon/
 │       └── k8s/                 # Kubernetes manifests (optional)
 │           ├── *.yaml
 │           └── resources/       # Sub-resources organized by component
-├── docs/                        # Jekyll documentation site (GitHub Pages source)
+├── docs/                        # Jekyll documentation site — Chinese (GitHub Pages source)
+├── en/                          # Jekyll documentation site — English mirror
 ├── _config.yml                  # Jekyll config (excludes addon data dirs from build)
 └── README.md                    # This file
 ```
@@ -47,8 +52,8 @@ addon/
 
 | Addon ID | Name | Description |
 |----------|------|-------------|
-| `system-monitor.addons.openkuboard.github.io` | K8S 资源监控套件 | Cluster monitoring with Prometheus / Grafana / Alertmanager |
-| `pv-browser.addons.openkuboard.github.io` | 存储卷浏览器 | Web-based PV file browser for Kubernetes |
+| `system-monitor.addons.openkuboard.github.io` | K8S Resource Monitoring Suite | Cluster monitoring with Prometheus / Grafana / Alertmanager |
+| `pv-browser.addons.openkuboard.github.io` | PV Browser | Web-based persistent volume file browser for Kubernetes |
 
 For details on each addon, see `index/repository.json`.
 
@@ -58,8 +63,10 @@ For details on each addon, see `index/repository.json`.
 
 1. Create a directory named `<your-addon-id>.addons.openkuboard.github.io/<version>/`
 2. Add an `addon.json` manifest (see existing addons as reference)
-3. Include any K8s manifests under `k8s/` and scripts under the root of your version directory
+3. Include any K8s manifests under `k8s/` and scripts at the root of your version directory
 4. Register it in `index/repository.json`
+
+See the [Development Guide](https://openkuboard.github.io/addon/docs/development/) for the full walkthrough.
 
 ---
 

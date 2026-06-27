@@ -1,7 +1,12 @@
 ---
 layout: default
 title: Addon 套件规范
+lang: zh
 ---
+
+<p align="right">
+  <a href="/addon/en/docs/addon-spec/">English</a> · 简体中文
+</p>
 
 # Addon 套件规范
 

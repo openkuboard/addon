@@ -8,8 +8,8 @@
 
 title: OpenKuboard Addon
 description: >-
-  OpenKuboard 套件（addon）主仓库 —— 套件开发文档与已有套件展示。
-  套件通过 raw URL 为平台提供 addon.json 与 K8s 清单。
+  OpenKuboard addon (套件) main repository. Addon definitions, development
+  documentation, and addon showcase. Both a data source (raw) and docs site.
 
 # Project-page URL is https://openkuboard.github.io/addon/
 baseurl: "/addon"
@@ -40,11 +40,16 @@ exclude:
   - "Gemfile"
   - "Gemfile.lock"
   - "README.md"
+  - "README.zh-CN.md"
 
-# Default layout for documentation pages
+# Default layout for documentation pages (both Chinese docs/ and English en/)
 defaults:
   - scope:
       path: "docs"
+    values:
+      layout: default
+  - scope:
+      path: "en"
     values:
       layout: default
 
