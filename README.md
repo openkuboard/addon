@@ -14,8 +14,8 @@ Addons extend OpenKuboard's UI with context-sensitive buttons (monitoring, file 
 | Page | Description |
 |------|-------------|
 | [📋 套件总览](https://openkuboard.github.io/addon/) | Available addons with details and links |
-| [📘 开发指南](https://openkuboard.github.io/addon/development) | How to create and publish a new addon |
-| [📐 规范说明](https://openkuboard.github.io/addon/addon-spec) | `addon.json` fields, extension points, repository index |
+| [📘 开发指南](https://openkuboard.github.io/addon/docs/development/) | How to create and publish a new addon |
+| [📐 规范说明](https://openkuboard.github.io/addon/docs/addon-spec/) | `addon.json` fields, extension points, repository index |
 
 ---
 

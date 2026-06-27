@@ -71,5 +71,5 @@ OpenKuboard 平台通过**套件（addon）**扩展功能。套件可部署 Kube
 
 如果你想为 OpenKuboard 开发新套件，请参阅：
 
-- [开发指南](./development)
-- [Addon 规范说明](./addon-spec)
+- [开发指南](./docs/development)
+- [Addon 规范说明](./docs/addon-spec)
