@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vsphere-csi-controller
+  namespace: {{NAMESPACE}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vsphere-csi-controller
+  template:
+    metadata:
+      labels:
+        app: vsphere-csi-controller
+    spec:
+      serviceAccountName: vsphere-csi-controller
+      containers:
+        - name: csi-provisioner
+          image: {{PROVISIONER_IMAGE}}
+          args:
+            - "--csi-address=$(ADDRESS)"
+            - "--v=5"
+            - "--leader-election=true"
+          env:
+            - name: ADDRESS
+              value: /csi/csi-provisioner.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: vsphere-csi
+          image: {{VSPHERE_CSI_IMAGE}}
+          args:
+            - "--endpoint=$(CSI_ENDPOINT)"
+            - "--drivername=csi.vsphere.vmware.com"
+          env:
+            - name: CSI_ENDPOINT
+              value: unix:///csi/csi-provisioner.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+      volumes:
+        - name: socket-dir
+          emptyDir: {}

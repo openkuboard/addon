@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portworx-csi-controller
+  namespace: {{NAMESPACE}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portworx-csi-controller
+  template:
+    metadata:
+      labels:
+        app: portworx-csi-controller
+    spec:
+      serviceAccountName: portworx-csi
+      containers:
+        - name: csi-provisioner
+          image: {{PROVISIONER_IMAGE}}
+          args:
+            - "--csi-address=$(ADDRESS)"
+            - "--v=5"
+            - "--leader-election=true"
+          env:
+            - name: ADDRESS
+              value: /csi/csi-provisioner.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: portworx-csi
+          image: {{PORTWORX_IMAGE}}
+          args:
+            - "--endpoint=$(CSI_ENDPOINT)"
+            - "--driver=pxd.portworx.com"
+          env:
+            - name: CSI_ENDPOINT
+              value: unix:///csi/csi-provisioner.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+      volumes:
+        - name: socket-dir
+          emptyDir: {}

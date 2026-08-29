@@ -1,0 +1,28 @@
+{
+  "id": "portworx-csi.addons.openkuboard.github.io",
+  "name": "Portworx CSI 驱动",
+  "version": "1.0.0",
+  "lastUpdate": "2026-08-29",
+  "maintainer": "devops",
+  "isGlobal": true,
+  "k8s": [
+    "k8s/csidriver.yaml",
+    "k8s/rbac.yaml",
+    "k8s/controller.yaml",
+    "k8s/node.yaml"
+  ],
+  "parameters": {
+    "PORTWORX_IMAGE": "portworx/px-enterprise:3.1.0",
+    "REGISTRAR_IMAGE": "registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.9.3",
+    "PROVISIONER_IMAGE": "registry.k8s.io/sig-storage/csi-provisioner:v3.6.3",
+    "NAMESPACE": "portworx"
+  },
+  "parameterDefs": [
+    { "name": "PORTWORX_IMAGE", "required": true, "default": "portworx/px-enterprise:3.1.0", "description": "Portworx 镜像（可替换为内网镜像）" },
+    { "name": "NAMESPACE", "required": false, "default": "portworx", "description": "CSI 驱动部署的命名空间" }
+  ],
+  "info": {
+    "description": "部署 Portworx CSI 驱动（pxd.portworx.com），供 PortworxVolume 类型存储类使用。",
+    "document": "https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/"
+  }
+}

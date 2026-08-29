@@ -1,0 +1,33 @@
+{
+  "id": "rbd-csi.addons.openkuboard.github.io",
+  "name": "Ceph RBD CSI 驱动",
+  "version": "1.0.0",
+  "lastUpdate": "2026-08-29",
+  "maintainer": "devops",
+  "isGlobal": true,
+  "k8s": [
+    "k8s/csidriver.yaml",
+    "k8s/rbac.yaml",
+    "k8s/controller.yaml",
+    "k8s/node.yaml"
+  ],
+  "parameters": {
+    "RBD_CSI_IMAGE": "quay.io/cephcsi/cephcsi:v3.10.2",
+    "REGISTRAR_IMAGE": "registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.9.3",
+    "PROVISIONER_IMAGE": "registry.k8s.io/sig-storage/csi-provisioner:v3.6.3",
+    "ATTACHER_IMAGE": "registry.k8s.io/sig-storage/csi-attacher:v4.4.3",
+    "RESIZER_IMAGE": "registry.k8s.io/sig-storage/csi-resizer:v1.9.3",
+    "SNAPSHOTTER_IMAGE": "registry.k8s.io/sig-storage/csi-snapshotter:v6.3.3",
+    "CLUSTER_ID": "",
+    "NAMESPACE": "rbd-csi"
+  },
+  "parameterDefs": [
+    { "name": "RBD_CSI_IMAGE", "required": true, "default": "quay.io/cephcsi/cephcsi:v3.10.2", "description": "Ceph CSI RBD 插件镜像（可替换为内网镜像）" },
+    { "name": "CLUSTER_ID", "required": true, "default": "", "description": "Ceph 集群 ID" },
+    { "name": "NAMESPACE", "required": false, "default": "rbd-csi", "description": "CSI 驱动部署的命名空间" }
+  ],
+  "info": {
+    "description": "部署 Ceph RBD CSI 驱动（rbd.csi.ceph.com），供 RBD 类型存储类使用。",
+    "document": "https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/"
+  }
+}
