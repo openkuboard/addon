@@ -28,6 +28,7 @@ spec:
           name: delegator
           volumeMounts:
             - mountPath: /var/lib/kubelet
+              mountPropagation: HostToContainer
               name: kubelet
             - mountPath: /run/mount
               name: mounts
@@ -39,6 +40,7 @@ spec:
           name: pv-browser
           volumeMounts:
             - mountPath: /var/lib/kubelet
+              mountPropagation: HostToContainer
               name: kubelet
             - mountPath: /run/mount
               name: mounts
