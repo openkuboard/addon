@@ -26,6 +26,7 @@ function onSelect(v: string | number | undefined) {
 
 const isHostDerived = () => props.def.category === 'host-derived'
 const isEnum = () => props.def.category === 'enum-from-hostReads'
+const isAllowCreate = () => isEnum() && !!props.def.allowCreate
 const hasOptions = () => (props.options ?? []).length > 0
 </script>
 
@@ -48,15 +49,17 @@ const hasOptions = () => (props.options ?? []).length > 0
       @update:model-value="onInput"
     />
 
-    <!-- enum-from-hostReads：下拉选择（无可选项时禁用并提示） -->
+    <!-- enum-from-hostReads：下拉选择；allowCreate 时支持输入自定义值（combobox） -->
     <el-select
       v-else-if="isEnum()"
       data-kind="select"
       :model-value="value"
-      :disabled="!hasOptions()"
-      :placeholder="hasOptions() ? '请选择' : '当前集群无可用选项（不可编辑）'"
+      :disabled="!isAllowCreate() && !hasOptions()"
+      :placeholder="isAllowCreate() ? '选择或输入' : hasOptions() ? '请选择' : '当前集群无可用选项（不可编辑）'"
       filterable
       clearable
+      :allow-create="isAllowCreate()"
+      :default-first-option="isAllowCreate()"
       class="param-row__select"
       @update:model-value="onSelect"
     >

@@ -78,13 +78,9 @@ onMounted(reload)
 
 <template>
   <div class="config-page">
-    <header class="config-page__header">
-      <div>
-        <h1 class="config-page__title">K8S 资源监控套件</h1>
-        <p class="config-page__sub">套件配置 · 集群：{{ clusterCode || '默认' }} · 经 addon-sdk 读写</p>
-      </div>
+    <div class="config-page__toolbar">
       <el-button text @click="reload" :loading="loading">重新加载参数</el-button>
-    </header>
+    </div>
 
     <el-tabs v-model="activeMainTab" class="config-main-tabs">
       <!-- 参数配置 -->
@@ -172,28 +168,13 @@ body {
 
 <style scoped>
 .config-page {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 20px 20px 60px;
+  padding: 12px 20px 40px;
   min-height: 100vh;
 }
-.config-page__header {
+.config-page__toolbar {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-.config-page__title {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-.config-page__sub {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
+  justify-content: flex-end;
+  margin-bottom: 4px;
 }
 .config-page__err {
   margin-bottom: 14px;

@@ -108,7 +108,8 @@
       "hostRead": "base_image_registry",
       "required": false,
       "default": "",
-      "description": "镜像仓库主机覆盖（默认留空，使用官方公共源）。"
+      "description": "镜像仓库主机覆盖（默认留空，使用官方公共源）。",
+      "allowCreate": true
     },
     {
       "name": "KUBERNETES_CLUSTER",
@@ -140,10 +141,12 @@
     },
     {
       "name": "MONITOR_NAMESPACE",
-      "category": "user-editable",
+      "category": "enum-from-hostReads",
       "required": true,
       "default": "openkuboard",
-      "description": "监控组件安装的 Kubernetes 命名空间。"
+      "description": "监控组件安装的 Kubernetes 命名空间。",
+      "hostRead": "namespaces",
+      "allowCreate": true
     }
   ],
   "permissions": [

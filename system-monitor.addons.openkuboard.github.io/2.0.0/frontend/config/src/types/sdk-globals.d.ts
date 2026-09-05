@@ -8,7 +8,7 @@
 /** 参数分类（parameterDefs v2 schema，见 addon.json parameterDefs） */
 type AddonParamCategory = 'user-editable' | 'host-derived' | 'enum-from-hostReads'
 
-/** 参数定义：name + category + 可选 hostRead / required / default / description */
+/** 参数定义：name + category + 可选 hostRead / required / default / description / allowCreate */
 interface AddonParamDef {
   name: string
   category: AddonParamCategory
@@ -17,6 +17,8 @@ interface AddonParamDef {
   required?: boolean
   default?: string
   description?: string
+  /** enum-from-hostReads 允许输入自定义值（combobox，如 MONITOR_NAMESPACE 可选已有或输入新值） */
+  allowCreate?: boolean
 }
 
 /** 主题同步：current 初始值 + subscribe 订阅变更（cb 立即回调一次） */
