@@ -87,7 +87,7 @@
   "parameters": {
     "NODE_EXPORTER_PORT": "9100",
     "PROMETHEUS_REPLICAS": "1",
-    "PROMETHEUS_STORAGE_CLASS": "please-provide-a-valid-storage-class-name",
+    "PROMETHEUS_STORAGE_CLASS": "",
     "PROMETHEUS_STORAGE_SIZE_PER_VOLUME": "20Gi",
     "KUBERNETES_CLUSTER": "default",
     "MONITOR_NAMESPACE": "openkuboard",
@@ -99,7 +99,7 @@
       "category": "enum-from-hostReads",
       "hostRead": "storageclasses",
       "required": true,
-      "default": "please-provide-a-valid-storage-class-name",
+      "default": "",
       "description": "为 Prometheus 提供持久化存储的 StorageClass 名称。"
     },
     {
