@@ -242,7 +242,7 @@
   "entry": {
     "nav": {
       "group": "监控",
-      "label": "资源监控",
+      "label": "资源层监控套件",
       "labelEn": "Monitor",
       "icon": "monitor"
     },
@@ -573,6 +573,10 @@
     "config": {
       "entry": "index.html",
       "basePath": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/config/dist/"
+    },
+    "usage": {
+      "entry": "index.html",
+      "basePath": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/usage/dist/"
     }
   },
   "rbac": [
