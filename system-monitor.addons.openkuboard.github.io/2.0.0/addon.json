@@ -573,14 +573,8 @@
     "timeoutSeconds": 300
   },
   "frontend": {
-    "config": {
-      "entry": "index.html",
-      "basePath": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/config/dist/"
-    },
-    "usage": {
-      "entry": "index.html",
-      "basePath": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/usage/dist/"
-    }
+    "config": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/dist/index.html#config",
+    "usage": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/dist/index.html#usage"
   },
   "rbac": [
     {
