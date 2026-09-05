@@ -1,0 +1,676 @@
+{
+  "id": "system-monitor.addons.openkuboard.github.io",
+  "name": "K8S 资源监控套件",
+  "version": "2.0.0",
+  "lastUpdate": "2026-09-05",
+  "maintainer": "devops",
+  "k8s": [
+    "k8s/namespace.yaml",
+    "k8s/alertmanagerConfigCustomResourceDefinition.yaml",
+    "k8s/alertmanagerCustomResourceDefinition.yaml",
+    "k8s/podmonitorCustomResourceDefinition.yaml",
+    "k8s/probeCustomResourceDefinition.yaml",
+    "k8s/prometheusCustomResourceDefinition.yaml",
+    "k8s/prometheusruleCustomResourceDefinition.yaml",
+    "k8s/servicemonitorCustomResourceDefinition.yaml",
+    "k8s/thanosrulerCustomResourceDefinition.yaml",
+    "k8s/clusterRole.yaml",
+    "k8s/clusterRoleBinding.yaml",
+    "k8s/serviceAccount.yaml",
+    "k8s/deployment.yaml",
+    "k8s/service.yaml",
+    "k8s/resources/alertmanager-main.yaml",
+    "k8s/resources/apiservice-v1beta1.metrics.k8s.io.yaml",
+    "k8s/resources/clusterrole-kube-state-metrics.yaml",
+    "k8s/resources/clusterrole-node-exporter.yaml",
+    "k8s/resources/clusterrole-prometheus-adapter.yaml",
+    "k8s/resources/clusterrole-prometheus-k8s.yaml",
+    "k8s/resources/clusterrole-resource-metrics-server-resources.yaml",
+    "k8s/resources/clusterrole-system-aggregated-metrics-reader.yaml",
+    "k8s/resources/clusterrolebinding-kube-state-metrics.yaml",
+    "k8s/resources/clusterrolebinding-node-exporter.yaml",
+    "k8s/resources/clusterrolebinding-prometheus-adapter.yaml",
+    "k8s/resources/clusterrolebinding-prometheus-k8s.yaml",
+    "k8s/resources/clusterrolebinding-resource-metrics-system-auth-delegator.yaml",
+    "k8s/resources/configmap-adapter-config.yaml",
+    "k8s/resources/configmap-grafana-dashboards.yaml",
+    "k8s/dashboard-definitions.yaml",
+    "k8s/resources/daemonset-node-exporter.yaml",
+    "k8s/resources/deployment-grafana.yaml",
+    "k8s/resources/deployment-kube-state-metrics.yaml",
+    "k8s/resources/deployment-prometheus-adapter.yaml",
+    "k8s/resources/prometheus-k8s.yaml",
+    "k8s/resources/prometheusrule-prometheus-k8s-rules.yaml",
+    "k8s/resources/role-prometheus-k8s-config.yaml",
+    "k8s/resources/role-prometheus-k8s.yaml",
+    "k8s/resources/rolebinding-prometheus-k8s-config.yaml",
+    "k8s/resources/rolebinding-prometheus-k8s.yaml",
+    "k8s/resources/rolebinding-resource-metrics-auth-reader.yaml",
+    "k8s/resources/secret-alertmanager-main.yaml",
+    "k8s/resources/secret-grafana-datasources.yaml",
+    "k8s/resources/service-alertmanager-main.yaml",
+    "k8s/resources/service-grafana.yaml",
+    "k8s/resources/service-kube-state-metrics.yaml",
+    "k8s/resources/service-node-exporter.yaml",
+    "k8s/resources/service-prometheus-adapter.yaml",
+    "k8s/resources/service-prometheus-k8s.yaml",
+    "k8s/resources/serviceaccount-alertmanager-main.yaml",
+    "k8s/resources/serviceaccount-grafana.yaml",
+    "k8s/resources/serviceaccount-kube-state-metrics.yaml",
+    "k8s/resources/serviceaccount-node-exporter.yaml",
+    "k8s/resources/serviceaccount-prometheus-adapter.yaml",
+    "k8s/resources/serviceaccount-prometheus-k8s.yaml",
+    "k8s/resources/servicemonitor-alertmanager.yaml",
+    "k8s/resources/servicemonitor-coredns.yaml",
+    "k8s/resources/servicemonitor-grafana.yaml",
+    "k8s/resources/servicemonitor-kube-apiserver.yaml",
+    "k8s/resources/servicemonitor-kube-controller-manager.yaml",
+    "k8s/resources/servicemonitor-kube-scheduler.yaml",
+    "k8s/resources/servicemonitor-kube-state-metrics.yaml",
+    "k8s/resources/servicemonitor-kubelet.yaml",
+    "k8s/resources/servicemonitor-node-exporter.yaml",
+    "k8s/resources/servicemonitor-prometheus-adapter.yaml",
+    "k8s/resources/servicemonitor-prometheus-operator.yaml",
+    "k8s/resources/servicemonitor-prometheus.yaml"
+  ],
+  "resources": [
+    "README.md",
+    "alert-config.json",
+    "alert-config-schema.json"
+  ],
+  "isGlobal": true,
+  "info": {
+    "description": "基于 Prometheus/Grafana 提供 Kubernetes 集群资源监控能力，包括 CPU、内存、磁盘、网络等资源层指标；适配 Kubernetes 1.35。",
+    "document": "",
+    "important": "安装前请在套件详情页配置 Prometheus StorageClass 与存储卷大小；需集群已启用 metrics-server 或 kubelet/cAdvisor 指标采集。"
+  },
+  "parameters": {
+    "NODE_EXPORTER_PORT": "9100",
+    "PROMETHEUS_REPLICAS": "1",
+    "PROMETHEUS_STORAGE_CLASS": "please-provide-a-valid-storage-class-name",
+    "PROMETHEUS_STORAGE_SIZE_PER_VOLUME": "20Gi",
+    "KUBERNETES_CLUSTER": "default",
+    "MONITOR_NAMESPACE": "openkuboard",
+    "MONITOR_IMAGE_REGISTRY": ""
+  },
+  "parameterDefs": [
+    {
+      "name": "PROMETHEUS_STORAGE_CLASS",
+      "category": "enum-from-hostReads",
+      "hostRead": "storageclasses",
+      "required": true,
+      "default": "please-provide-a-valid-storage-class-name",
+      "description": "为 Prometheus 提供持久化存储的 StorageClass 名称。"
+    },
+    {
+      "name": "MONITOR_IMAGE_REGISTRY",
+      "category": "enum-from-hostReads",
+      "hostRead": "base_image_registry",
+      "required": false,
+      "default": "",
+      "description": "镜像仓库主机覆盖（默认留空，使用官方公共源）。"
+    },
+    {
+      "name": "KUBERNETES_CLUSTER",
+      "category": "host-derived",
+      "required": true,
+      "default": "default",
+      "description": "Kubernetes 集群在平台中的名称标识。"
+    },
+    {
+      "name": "NODE_EXPORTER_PORT",
+      "category": "user-editable",
+      "required": true,
+      "default": "9100",
+      "description": "Node Exporter 监听端口（hostPort）。"
+    },
+    {
+      "name": "PROMETHEUS_REPLICAS",
+      "category": "user-editable",
+      "required": true,
+      "default": "1",
+      "description": "Prometheus 实例数量。"
+    },
+    {
+      "name": "PROMETHEUS_STORAGE_SIZE_PER_VOLUME",
+      "category": "user-editable",
+      "required": true,
+      "default": "20Gi",
+      "description": "每个 Prometheus 实例的 PVC 容量。"
+    },
+    {
+      "name": "MONITOR_NAMESPACE",
+      "category": "user-editable",
+      "required": true,
+      "default": "openkuboard",
+      "description": "监控组件安装的 Kubernetes 命名空间。"
+    }
+  ],
+  "permissions": [
+    {
+      "code": "monitor",
+      "label": "资源监控",
+      "labelEn": "Monitor",
+      "children": [
+        {
+          "code": "monitor:view",
+          "label": "查看监控",
+          "labelEn": "View"
+        },
+        {
+          "code": "monitor:config",
+          "label": "监控配置",
+          "labelEn": "Config",
+          "children": [
+            {
+              "code": "monitor:config:edit",
+              "label": "编辑配置",
+              "labelEn": "Edit Config"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resourceAccess": [
+    {
+      "group": "monitoring.coreos.com",
+      "version": "v1",
+      "resource": "prometheusrules",
+      "namespaced": true,
+      "actions": {
+        "list": "monitor:view",
+        "update": "monitor:config:edit"
+      }
+    }
+  ],
+  "hostReads": {
+    "k8s": [
+      "storageclasses",
+      "namespaces"
+    ],
+    "settings": [
+      "base_image_registry"
+    ]
+  },
+  "serviceUI": [
+    {
+      "id": "grafana-home",
+      "namespace": "{{parameters.MONITOR_NAMESPACE}}",
+      "service": "grafana",
+      "port": 3000,
+      "path": "/",
+      "target": "blank",
+      "label": "Grafana 主页",
+      "labelEn": "Grafana Home",
+      "permission": "monitor:view"
+    },
+    {
+      "id": "grafana",
+      "namespace": "{{parameters.MONITOR_NAMESPACE}}",
+      "service": "grafana",
+      "port": 3000,
+      "path": "/",
+      "target": "blank",
+      "label": "Grafana",
+      "labelEn": "Grafana",
+      "permission": "monitor:view"
+    },
+    {
+      "id": "prometheus",
+      "namespace": "{{parameters.MONITOR_NAMESPACE}}",
+      "service": "prometheus-k8s",
+      "port": 9090,
+      "path": "/",
+      "target": "blank",
+      "label": "Prometheus 主页",
+      "labelEn": "Prometheus Home",
+      "permission": "monitor:view"
+    },
+    {
+      "id": "alertmanager",
+      "namespace": "{{parameters.MONITOR_NAMESPACE}}",
+      "service": "alertmanager-main",
+      "port": 9093,
+      "path": "/",
+      "target": "blank",
+      "label": "告警管理主页",
+      "labelEn": "Alertmanager Home",
+      "permission": "monitor:view"
+    }
+  ],
+  "entry": {
+    "nav": {
+      "group": "监控",
+      "label": "资源监控",
+      "labelEn": "Monitor",
+      "icon": "monitor"
+    },
+    "context": [
+      {
+        "level": "node-context",
+        "extensionPoint": "node-context.extension-point.openkuboard.github.io",
+        "label": "节点资源监控",
+        "labelEn": "Monitor Node Resources",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/fa49a4706d07a042595b664c87fb33ea/nodes?orgId=1&var-instance={{node.metadata.name}}&from=now-1h&to=now&kiosk=tv&refresh=10s",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "pod-context",
+        "extensionPoint": "pod-context.extension-point.openkuboard.github.io",
+        "label": "容器组资源监控",
+        "labelEn": "Monitor Pod Resource",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/6581e46e4e5c7ba40a07646395ef7b23/k8s-resources-pod?orgId=1&var-datasource=prometheus&var-namespace={{pod.metadata.namespace}}&var-pod={{pod.metadata.name}}&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "pod-context",
+        "extensionPoint": "pod-context.extension-point.openkuboard.github.io",
+        "label": "容器组网络监控",
+        "labelEn": "Monitor Pod Networking",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/7a18067ce943a40ae25454675c19ff5c/pod-total?orgId=1&var-datasource=prometheus&var-namespace={{pod.metadata.namespace}}&var-pod={{pod.metadata.name}}&refresh=10s&var-resolution=30s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "node-context",
+        "extensionPoint": "node-context.extension-point.openkuboard.github.io",
+        "label": "节点上的容器组",
+        "labelEn": "Pods On Node",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/200ac8fdbfbb74b39aff88118e4d1c2c/k8s-resources-node?orgId=1&var-datasource=prometheus&var-node={{node.metadata.name}}&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "node-context",
+        "extensionPoint": "node-context.extension-point.openkuboard.github.io",
+        "label": "Kubelet 监控",
+        "labelEn": "Monitor Kubelet",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/3138fa155d5915769fbded898ac09fd9/kubelet?orgId=1&var-datasource=prometheus&var-instance={{node.internalIP}}:{{node.kubeletPort}}&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "workload-context",
+        "extensionPoint": "workload-context.extension-point.openkuboard.github.io",
+        "label": "工作负载资源监控",
+        "labelEn": "Monitor Workload Resources",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/a164a7f0339f99e89cea5cb47e9be617/k8s-resources-workload?orgId=1&var-datasource=prometheus&var-namespace={{workload.metadata.namespace}}&var-workload={{workload.metadata.name}}&var-type={{workload.type}}&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "workload-context",
+        "extensionPoint": "workload-context.extension-point.openkuboard.github.io",
+        "label": "工作负载网络监控",
+        "labelEn": "Monitor Workload Networking",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/728bf77cc1166d2f3133bf25846876cc/workload-total?orgId=1&var-datasource=prometheus&var-namespace={{workload.metadata.namespace}}&var-workload={{workload.metadata.name}}&var-type={{workload.type}}&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "namespace-context",
+        "extensionPoint": "namespace-context.extension-point.openkuboard.github.io",
+        "label": "资源监控（Pods）",
+        "labelEn": "Monitor Resources (Pods)",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/85a562078cdf77779eaa1add43ccec1e/k8s-resources-namespace?orgId=1&var-datasource=prometheus&var-namespace={{namespace.metadata.name}}&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "namespace-context",
+        "extensionPoint": "namespace-context.extension-point.openkuboard.github.io",
+        "label": "网络监控（Pods）",
+        "labelEn": "Monitor Networking (Pods)",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/8b7a8b326d7a6f1f04244066368c67af/namespace-by-pod?orgId=1&var-datasource=prometheus&var-namespace={{namespace.metadata.name}}&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "namespace-context",
+        "extensionPoint": "namespace-context.extension-point.openkuboard.github.io",
+        "label": "资源监控（Deployments）",
+        "labelEn": "Monitor Resources (Deployments)",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/a87fb0d919ec0ea5f6543124e16c42a5/k8s-resources-workloads-namespace?orgId=1&var-datasource=prometheus&var-namespace={{namespace.metadata.name}}&var-type=deployment&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "namespace-context",
+        "extensionPoint": "namespace-context.extension-point.openkuboard.github.io",
+        "label": "网络监控（Deployments）",
+        "labelEn": "Monitor Networking (Deployments)",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/bbb2a765a623ae38130206c7d94a160f/namespace-by-workload?orgId=1&var-datasource=prometheus&var-namespace={{namespace.metadata.name}}&var-type=deployment&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "namespace-context",
+        "extensionPoint": "namespace-context.extension-point.openkuboard.github.io",
+        "label": "资源监控（StatefulSets）",
+        "labelEn": "Monitor Resources (StatefulSets)",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/a87fb0d919ec0ea5f6543124e16c42a5/k8s-resources-workloads-namespace?orgId=1&var-datasource=prometheus&var-namespace={{namespace.metadata.name}}&var-type=statefulset&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "namespace-context",
+        "extensionPoint": "namespace-context.extension-point.openkuboard.github.io",
+        "label": "网络监控（StatefulSets）",
+        "labelEn": "Monitor Networking (StatefulSets)",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/bbb2a765a623ae38130206c7d94a160f/namespace-by-workload?orgId=1&var-datasource=prometheus&var-namespace={{namespace.metadata.name}}&var-type=statefulset&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "namespace-context",
+        "extensionPoint": "namespace-context.extension-point.openkuboard.github.io",
+        "label": "资源监控（DaemonSets）",
+        "labelEn": "Monitor Resources (DaemonSets)",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/a87fb0d919ec0ea5f6543124e16c42a5/k8s-resources-workloads-namespace?orgId=1&var-datasource=prometheus&var-namespace={{namespace.metadata.name}}&var-type=daemonset&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "namespace-context",
+        "extensionPoint": "namespace-context.extension-point.openkuboard.github.io",
+        "label": "网络监控（DaemonSets）",
+        "labelEn": "Monitor Networking (DaemonSets)",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/bbb2a765a623ae38130206c7d94a160f/namespace-by-workload?orgId=1&var-datasource=prometheus&var-namespace={{namespace.metadata.name}}&var-type=daemonset&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "cluster-context",
+        "extensionPoint": "cluster-context.extension-point.openkuboard.github.io",
+        "label": "Kubernetes APIServer 监控",
+        "labelEn": "Monitor Kubernetes APIServer",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/09ec8aa1e996d6ffcd6817bbaff4db1b/apiserver?orgId=1&var-datasource=prometheus&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "cluster-context",
+        "extensionPoint": "cluster-context.extension-point.openkuboard.github.io",
+        "label": "Kubernetes Controller Manager 监控",
+        "labelEn": "Monitor Kubernetes Controller Manager",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/72e0e05bef5099e5f049b05fdc429ed4/controller-manager?orgId=1&var-datasource=prometheus&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "cluster-context",
+        "extensionPoint": "cluster-context.extension-point.openkuboard.github.io",
+        "label": "Kubernetes Scheduler 监控",
+        "labelEn": "Monitor Kubernetes Scheduler",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/2e6b6a3b4bddf1427b3a55aa1311c656/scheduler?orgId=1&var-datasource=prometheus&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "cluster-context",
+        "extensionPoint": "cluster-context.extension-point.openkuboard.github.io",
+        "label": "资源监控",
+        "labelEn": "Monitor Resource",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/efa86fd1d0c121a26444b636a3f509a8/k8s-resources-cluster?orgId=1&var-datasource=prometheus&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "cluster-context",
+        "extensionPoint": "cluster-context.extension-point.openkuboard.github.io",
+        "label": "网络监控",
+        "labelEn": "Monitor Networking",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/ff635a025bcfea7bc3dd4f508990a3e9/cluster-total?orgId=1&var-datasource=prometheus&var-resolution=30s&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "cluster-context",
+        "extensionPoint": "cluster-context.extension-point.openkuboard.github.io",
+        "label": "Kubelet 监控",
+        "labelEn": "Monitor Kubelet",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/3138fa155d5915769fbded898ac09fd9/kubelet?orgId=1&var-datasource=prometheus&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "cluster-context",
+        "extensionPoint": "cluster-context.extension-point.openkuboard.github.io",
+        "label": "资源使用监控",
+        "labelEn": "Monitor Resource Usage",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/3e97d1d02672cdd0861f4c97c64f89b2/node-cluster-rsrc-use?orgId=1&var-datasource=prometheus&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      },
+      {
+        "level": "node-context",
+        "extensionPoint": "node-context.extension-point.openkuboard.github.io",
+        "label": "API Server 监控",
+        "labelEn": "Monitor API Server",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/09ec8aa1e996d6ffcd6817bbaff4db1b/apiserver?orgId=1&var-datasource=prometheus&refresh=10s&var-instance={{node.internalIP}}:6443&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view",
+        "visibleWhen": {
+          "path": "node.metadata.labels['node-role.kubernetes.io/master']",
+          "op": "exists"
+        }
+      },
+      {
+        "level": "node-context",
+        "extensionPoint": "node-context.extension-point.openkuboard.github.io",
+        "label": "资源使用情况",
+        "labelEn": "Resource Usage",
+        "route": {
+          "serviceUI": "grafana",
+          "path": "/d/fac67cfbe174d3ef53eb473d73d9212f/node-rsrc-use?orgId=1&var-datasource=prometheus&var-instance={{node.metadata.name}}&refresh=10s&from=now-1h&to=now&kiosk=tv",
+          "target": "blank"
+        },
+        "permission": "monitor:view"
+      }
+    ],
+    "quickLink": [
+      {
+        "label": "Grafana 主页",
+        "labelEn": "Grafana Home",
+        "serviceUI": "grafana-home",
+        "target": "blank"
+      },
+      {
+        "label": "Prometheus 主页",
+        "labelEn": "Prometheus Home",
+        "serviceUI": "prometheus",
+        "target": "blank"
+      },
+      {
+        "label": "告警管理主页",
+        "labelEn": "Alertmanager Home",
+        "serviceUI": "alertmanager",
+        "target": "blank"
+      }
+    ]
+  },
+  "configEntry": {
+    "tab": "config"
+  },
+  "readiness": {
+    "serviceUI": "grafana-home",
+    "path": "/api/health",
+    "timeoutSeconds": 300
+  },
+  "frontend": {
+    "config": {
+      "entry": "index.html",
+      "basePath": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/config/dist/"
+    }
+  },
+  "rbac": [
+    {
+      "apiGroup": "",
+      "resource": "services/proxy",
+      "namespace": "openkuboard",
+      "name": "grafana",
+      "verb": "get"
+    }
+  ],
+  "installPackages": [
+    {
+      "name": "默认资源包",
+      "resources": [
+        "k8s/namespace.yaml",
+        "k8s/alertmanagerConfigCustomResourceDefinition.yaml",
+        "k8s/alertmanagerCustomResourceDefinition.yaml",
+        "k8s/podmonitorCustomResourceDefinition.yaml",
+        "k8s/probeCustomResourceDefinition.yaml",
+        "k8s/prometheusCustomResourceDefinition.yaml",
+        "k8s/prometheusruleCustomResourceDefinition.yaml"
+      ]
+    },
+    {
+      "name": "资源包 1",
+      "resources": [
+        "k8s/servicemonitorCustomResourceDefinition.yaml",
+        "k8s/thanosrulerCustomResourceDefinition.yaml",
+        "k8s/clusterRole.yaml",
+        "k8s/clusterRoleBinding.yaml",
+        "k8s/serviceAccount.yaml",
+        "k8s/deployment.yaml",
+        "k8s/service.yaml"
+      ]
+    },
+    {
+      "name": "资源包 2",
+      "resources": [
+        "k8s/resources/alertmanager-main.yaml",
+        "k8s/resources/apiservice-v1beta1.metrics.k8s.io.yaml",
+        "k8s/resources/clusterrole-kube-state-metrics.yaml",
+        "k8s/resources/clusterrole-node-exporter.yaml",
+        "k8s/resources/clusterrole-prometheus-adapter.yaml",
+        "k8s/resources/clusterrole-prometheus-k8s.yaml",
+        "k8s/resources/clusterrole-resource-metrics-server-resources.yaml",
+        "k8s/resources/clusterrole-system-aggregated-metrics-reader.yaml",
+        "k8s/resources/clusterrolebinding-kube-state-metrics.yaml",
+        "k8s/resources/clusterrolebinding-node-exporter.yaml",
+        "k8s/resources/clusterrolebinding-prometheus-adapter.yaml",
+        "k8s/resources/clusterrolebinding-prometheus-k8s.yaml",
+        "k8s/resources/clusterrolebinding-resource-metrics-system-auth-delegator.yaml",
+        "k8s/resources/configmap-adapter-config.yaml",
+        "k8s/resources/configmap-grafana-dashboards.yaml",
+        "k8s/resources/daemonset-node-exporter.yaml",
+        "k8s/resources/deployment-grafana.yaml",
+        "k8s/resources/deployment-kube-state-metrics.yaml",
+        "k8s/resources/deployment-prometheus-adapter.yaml",
+        "k8s/resources/prometheus-k8s.yaml",
+        "k8s/resources/prometheusrule-prometheus-k8s-rules.yaml",
+        "k8s/resources/role-prometheus-k8s-config.yaml",
+        "k8s/resources/role-prometheus-k8s.yaml",
+        "k8s/resources/rolebinding-prometheus-k8s-config.yaml",
+        "k8s/resources/rolebinding-prometheus-k8s.yaml",
+        "k8s/resources/rolebinding-resource-metrics-auth-reader.yaml",
+        "k8s/resources/secret-alertmanager-main.yaml",
+        "k8s/resources/secret-grafana-datasources.yaml",
+        "k8s/resources/service-alertmanager-main.yaml",
+        "k8s/resources/service-grafana.yaml",
+        "k8s/resources/service-kube-state-metrics.yaml",
+        "k8s/resources/service-node-exporter.yaml",
+        "k8s/resources/service-prometheus-adapter.yaml",
+        "k8s/resources/service-prometheus-k8s.yaml",
+        "k8s/resources/serviceaccount-alertmanager-main.yaml",
+        "k8s/resources/serviceaccount-grafana.yaml",
+        "k8s/resources/serviceaccount-kube-state-metrics.yaml",
+        "k8s/resources/serviceaccount-node-exporter.yaml",
+        "k8s/resources/serviceaccount-prometheus-adapter.yaml",
+        "k8s/resources/serviceaccount-prometheus-k8s.yaml",
+        "k8s/resources/servicemonitor-alertmanager.yaml",
+        "k8s/resources/servicemonitor-coredns.yaml",
+        "k8s/resources/servicemonitor-grafana.yaml",
+        "k8s/resources/servicemonitor-kube-apiserver.yaml",
+        "k8s/resources/servicemonitor-kube-controller-manager.yaml",
+        "k8s/resources/servicemonitor-kube-scheduler.yaml",
+        "k8s/resources/servicemonitor-kube-state-metrics.yaml",
+        "k8s/resources/servicemonitor-kubelet.yaml",
+        "k8s/resources/servicemonitor-node-exporter.yaml",
+        "k8s/resources/servicemonitor-prometheus-adapter.yaml",
+        "k8s/resources/servicemonitor-prometheus-operator.yaml",
+        "k8s/resources/servicemonitor-prometheus.yaml"
+      ]
+    },
+    {
+      "name": "资源包 3",
+      "resources": [
+        "k8s/dashboard-definitions.yaml"
+      ]
+    }
+  ]
+}

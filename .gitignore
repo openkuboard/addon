@@ -5,3 +5,6 @@
 .idea/
 .vscode/
 *.swp
+
+# 各 addon 前端工程依赖
+node_modules/
