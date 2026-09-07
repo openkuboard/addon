@@ -22,12 +22,30 @@
     "NAMESPACE": "rbd-csi"
   },
   "parameterDefs": [
-    { "name": "RBD_CSI_IMAGE", "required": true, "default": "quay.io/cephcsi/cephcsi:v3.10.2", "description": "Ceph CSI RBD 插件镜像（可替换为内网镜像）" },
-    { "name": "CLUSTER_ID", "required": true, "default": "", "description": "Ceph 集群 ID" },
-    { "name": "NAMESPACE", "required": false, "default": "rbd-csi", "description": "CSI 驱动部署的命名空间" }
+    {
+      "name": "RBD_CSI_IMAGE",
+      "required": true,
+      "default": "quay.io/cephcsi/cephcsi:v3.10.2",
+      "description": "Ceph CSI RBD 插件镜像（可替换为内网镜像）"
+    },
+    {
+      "name": "CLUSTER_ID",
+      "required": true,
+      "default": "",
+      "description": "Ceph 集群 ID"
+    },
+    {
+      "name": "NAMESPACE",
+      "required": false,
+      "default": "rbd-csi",
+      "description": "CSI 驱动部署的命名空间"
+    }
   ],
   "info": {
     "description": "部署 Ceph RBD CSI 驱动（rbd.csi.ceph.com），供 RBD 类型存储类使用。",
     "document": "https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/"
-  }
+  },
+  "provisioners": [
+    "rbd"
+  ]
 }

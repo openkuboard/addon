@@ -19,11 +19,24 @@
     "NAMESPACE": "vmware-system-csi"
   },
   "parameterDefs": [
-    { "name": "VSPHERE_CSI_IMAGE", "required": true, "default": "gcr.io/cloud-provider-vsphere/csi/release/driver:v3.1.0", "description": "vSphere CSI 驱动镜像（可替换为内网镜像）" },
-    { "name": "NAMESPACE", "required": false, "default": "vmware-system-csi", "description": "CSI 驱动部署的命名空间" }
+    {
+      "name": "VSPHERE_CSI_IMAGE",
+      "required": true,
+      "default": "gcr.io/cloud-provider-vsphere/csi/release/driver:v3.1.0",
+      "description": "vSphere CSI 驱动镜像（可替换为内网镜像）"
+    },
+    {
+      "name": "NAMESPACE",
+      "required": false,
+      "default": "vmware-system-csi",
+      "description": "CSI 驱动部署的命名空间"
+    }
   ],
   "info": {
     "description": "部署 vSphere CSI 驱动（csi.vsphere.vmware.com），供 VsphereVolume 类型存储类使用。",
     "document": "https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/"
-  }
+  },
+  "provisioners": [
+    "vsphere"
+  ]
 }

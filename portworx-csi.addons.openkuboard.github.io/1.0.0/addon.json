@@ -18,11 +18,24 @@
     "NAMESPACE": "portworx"
   },
   "parameterDefs": [
-    { "name": "PORTWORX_IMAGE", "required": true, "default": "portworx/px-enterprise:3.1.0", "description": "Portworx 镜像（可替换为内网镜像）" },
-    { "name": "NAMESPACE", "required": false, "default": "portworx", "description": "CSI 驱动部署的命名空间" }
+    {
+      "name": "PORTWORX_IMAGE",
+      "required": true,
+      "default": "portworx/px-enterprise:3.1.0",
+      "description": "Portworx 镜像（可替换为内网镜像）"
+    },
+    {
+      "name": "NAMESPACE",
+      "required": false,
+      "default": "portworx",
+      "description": "CSI 驱动部署的命名空间"
+    }
   ],
   "info": {
     "description": "部署 Portworx CSI 驱动（pxd.portworx.com），供 PortworxVolume 类型存储类使用。",
     "document": "https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/"
-  }
+  },
+  "provisioners": [
+    "portworx"
+  ]
 }
