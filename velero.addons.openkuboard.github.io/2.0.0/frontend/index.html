@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Velero 备份套件</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!--
+      addon-sdk 由 host 在 /addon-sdk/index.js 静态挂载；源码（src/main.ts）在运行时以
+      动态 import('/addon-sdk/index.js') 加载它，因此不在此处写死的 <script src>。
+      合并后的单入口按 URL 锚区分页面：index.html#config → config 配置页，
+      index.html#usage（或空 hash）→ usage 使用页。
+    -->
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

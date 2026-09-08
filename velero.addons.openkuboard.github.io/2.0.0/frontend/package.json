@@ -1,0 +1,28 @@
+{
+  "name": "velero-addon-frontend",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Velero 备份套件前端：config 参数/存储配置页 + usage 使用页（备份历史/定时备份/恢复/存储位置），按 URL 锚（#config / #usage）区分，Vue3 + Element Plus。",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "element-plus": "^2.13.2",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.0",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^15.11.0",
+    "typescript": "~5.6.0",
+    "vite": "^5.4.0",
+    "vitest": "^2.1.0",
+    "vue-tsc": "^2.1.0"
+  }
+}

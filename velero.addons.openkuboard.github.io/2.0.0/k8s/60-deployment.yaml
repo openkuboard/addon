@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: velero
+  name: velero
+  namespace: {{VELERO_NAMESPACE}}
+spec:
+  selector:
+    matchLabels:
+      deploy: velero
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: '8085'
+        prometheus.io/scrape: 'true'
+      labels:
+        component: velero
+        deploy: velero
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/os
+                operator: NotIn
+                values:
+                - windows
+      containers:
+      - args:
+        - server
+        - --features=
+        - --uploader-type=kopia
+        command:
+        - /velero
+        env:
+        - name: VELERO_SCRATCH_DIR
+          value: /scratch
+        - name: VELERO_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: LD_LIBRARY_PATH
+          value: /plugins
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /credentials/cloud
+        - name: AWS_SHARED_CREDENTIALS_FILE
+          value: /credentials/cloud
+        - name: AZURE_CREDENTIALS_FILE
+          value: /credentials/cloud
+        - name: ALIBABA_CLOUD_CREDENTIALS_FILE
+          value: /credentials/cloud
+        image: {{VELERO_IMAGE_REGISTRY}}velero/velero:{{VELERO_VERSION}}
+        imagePullPolicy: IfNotPresent
+        name: velero
+        ports:
+        - containerPort: 8085
+          name: metrics
+        resources:
+          limits:
+            cpu: '1'
+            memory: 512Mi
+          requests:
+            cpu: 500m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /plugins
+          name: plugins
+        - mountPath: /scratch
+          name: scratch
+        - mountPath: /credentials
+          name: cloud-credentials
+      initContainers:
+      - image: {{VELERO_IMAGE_REGISTRY}}velero/velero-plugin-for-aws:{{VELERO_PLUGIN_AWS_VERSION}}
+        imagePullPolicy: IfNotPresent
+        name: velero-plugin-for-aws
+        resources: {}
+        volumeMounts:
+        - mountPath: /target
+          name: plugins
+      os:
+        name: linux
+      restartPolicy: Always
+      serviceAccountName: velero
+      volumes:
+      - emptyDir: {}
+        name: plugins
+      - emptyDir: {}
+        name: scratch
+      - name: cloud-credentials
+        secret:
+          defaultMode: 292
+          secretName: cloud-credentials

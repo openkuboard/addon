@@ -1,0 +1,362 @@
+{
+  "id": "velero.addons.openkuboard.github.io",
+  "name": "Velero 备份套件",
+  "version": "2.0.0",
+  "lastUpdate": "2026-09-08",
+  "maintainer": "devops",
+  "k8s": [
+    "k8s/00-namespace.yaml",
+    "k8s/10-crds.yaml",
+    "k8s/20-serviceaccount.yaml",
+    "k8s/30-clusterrolebinding.yaml",
+    "k8s/40-secret.yaml",
+    "k8s/50-backupstoragelocation.yaml",
+    "k8s/60-deployment.yaml"
+  ],
+  "resources": [
+    "README.md"
+  ],
+  "isGlobal": true,
+  "info": {
+    "description": "基于 Velero + S3/MinIO 的 Kubernetes 集群备份/恢复套件，提供完整的备份历史、定时备份与恢复能力。",
+    "document": "",
+    "important": "安装前请在套件配置页填写 MinIO 对象存储参数（端点、桶名、AccessKey/SecretKey）；修改参数后需重新应用安装脚本生效。"
+  },
+  "parameters": {
+    "KUBERNETES_CLUSTER": "default",
+    "VELERO_NAMESPACE": "velero",
+    "VELERO_VERSION": "v1.18.1",
+    "VELERO_PLUGIN_AWS_VERSION": "v1.11.0",
+    "VELERO_IMAGE_REGISTRY": "",
+    "MINIO_ENDPOINT": "",
+    "MINIO_BUCKET": "velero",
+    "MINIO_ACCESS_KEY": "",
+    "MINIO_SECRET_KEY": "",
+    "MINIO_REGION": "minio"
+  },
+  "parameterDefs": [
+    {
+      "name": "VELERO_NAMESPACE",
+      "category": "enum-from-hostReads",
+      "hostRead": "namespaces",
+      "required": true,
+      "default": "velero",
+      "description": "Velero 组件安装的 Kubernetes 命名空间。",
+      "allowCreate": true
+    },
+    {
+      "name": "KUBERNETES_CLUSTER",
+      "category": "host-derived",
+      "required": true,
+      "default": "default",
+      "description": "Kubernetes 集群在平台中的名称标识。"
+    },
+    {
+      "name": "VELERO_IMAGE_REGISTRY",
+      "category": "user-editable",
+      "required": false,
+      "default": "",
+      "description": "Velero 镜像仓库前缀（含结尾 /，如 my-registry.example.com/；留空走官方公共源 docker.io）。"
+    },
+    {
+      "name": "VELERO_VERSION",
+      "category": "user-editable",
+      "required": true,
+      "default": "v1.18.1",
+      "description": "Velero Server 镜像版本标签。"
+    },
+    {
+      "name": "VELERO_PLUGIN_AWS_VERSION",
+      "category": "user-editable",
+      "required": true,
+      "default": "v1.11.0",
+      "description": "Velero AWS(S3) 对象存储插件镜像版本标签。"
+    },
+    {
+      "name": "MINIO_ENDPOINT",
+      "category": "user-editable",
+      "required": true,
+      "default": "",
+      "description": "S3/MinIO 对象存储服务地址（需集群节点可达）。"
+    },
+    {
+      "name": "MINIO_BUCKET",
+      "category": "user-editable",
+      "required": true,
+      "default": "velero",
+      "description": "Velero 备份数据存储桶（bucket）。"
+    },
+    {
+      "name": "MINIO_ACCESS_KEY",
+      "category": "user-editable",
+      "required": true,
+      "default": "",
+      "description": "S3/MinIO 访问密钥 AccessKey。"
+    },
+    {
+      "name": "MINIO_SECRET_KEY",
+      "category": "user-editable",
+      "required": true,
+      "default": "",
+      "description": "S3/MinIO 访问密钥 SecretKey（保存进集群 Secret）。"
+    },
+    {
+      "name": "MINIO_REGION",
+      "category": "user-editable",
+      "required": false,
+      "default": "minio",
+      "description": "S3 region 标识（MinIO 场景可任意填写，如 minio）。"
+    }
+  ],
+  "permissions": [
+    {
+      "code": "velero",
+      "label": "备份恢复",
+      "labelEn": "Velero Backup",
+      "children": [
+        {
+          "code": "velero:view",
+          "label": "查看备份",
+          "labelEn": "View"
+        },
+        {
+          "code": "velero:config",
+          "label": "套件配置",
+          "labelEn": "Config",
+          "children": [
+            {
+              "code": "velero:config:edit",
+              "label": "编辑配置",
+              "labelEn": "Edit Config"
+            }
+          ]
+        },
+        {
+          "code": "velero:backup",
+          "label": "备份管理",
+          "labelEn": "Backup",
+          "children": [
+            {
+              "code": "velero:backup:create",
+              "label": "创建备份",
+              "labelEn": "Create Backup"
+            },
+            {
+              "code": "velero:backup:delete",
+              "label": "删除备份",
+              "labelEn": "Delete Backup"
+            }
+          ]
+        },
+        {
+          "code": "velero:restore",
+          "label": "恢复管理",
+          "labelEn": "Restore",
+          "children": [
+            {
+              "code": "velero:restore:create",
+              "label": "创建恢复",
+              "labelEn": "Create Restore"
+            }
+          ]
+        },
+        {
+          "code": "velero:schedule",
+          "label": "定时备份",
+          "labelEn": "Schedule",
+          "children": [
+            {
+              "code": "velero:schedule:create",
+              "label": "创建计划",
+              "labelEn": "Create Schedule"
+            },
+            {
+              "code": "velero:schedule:delete",
+              "label": "删除计划",
+              "labelEn": "Delete Schedule"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "resourceAccess": [
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "backups",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view",
+        "create": "velero:backup:create",
+        "delete": "velero:backup:delete"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "restores",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view",
+        "create": "velero:restore:create"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "schedules",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view",
+        "create": "velero:schedule:create",
+        "delete": "velero:schedule:delete"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "backupstoragelocations",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "volumesnapshotlocations",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "backuprepositories",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "downloadrequests",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "deletebackuprequests",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "create": "velero:backup:delete"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "serverstatusrequests",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "create": "velero:view"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "podvolumebackups",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view"
+      }
+    },
+    {
+      "group": "velero.io",
+      "version": "v1",
+      "resource": "podvolumerestores",
+      "namespaced": true,
+      "actions": {
+        "list": "velero:view",
+        "get": "velero:view"
+      }
+    }
+  ],
+  "hostReads": {
+    "k8s": [
+      "namespaces"
+    ],
+    "settings": []
+  },
+  "serviceUI": [],
+  "entry": {
+    "nav": {
+      "group": "备份",
+      "label": "Velero 备份套件",
+      "labelEn": "Velero Backup",
+      "icon": "backup"
+    },
+    "context": [],
+    "quickLink": []
+  },
+  "configEntry": {
+    "tab": "config"
+  },
+  "frontend": {
+    "config": "/addons/velero.addons.openkuboard.github.io@2.0.0/frontend/dist/index.html#config",
+    "usage": "/addons/velero.addons.openkuboard.github.io@2.0.0/frontend/dist/index.html#usage"
+  },
+  "rbac": [
+    {
+      "apiGroup": "velero.io",
+      "resource": "backups",
+      "namespace": "velero",
+      "name": "",
+      "verb": "list"
+    }
+  ],
+  "installPackages": [
+    {
+      "name": "默认资源包",
+      "resources": [
+        "k8s/00-namespace.yaml",
+        "k8s/10-crds.yaml"
+      ]
+    },
+    {
+      "name": "资源包 1",
+      "resources": [
+        "k8s/20-serviceaccount.yaml",
+        "k8s/30-clusterrolebinding.yaml"
+      ]
+    },
+    {
+      "name": "资源包 2",
+      "resources": [
+        "k8s/40-secret.yaml",
+        "k8s/50-backupstoragelocation.yaml"
+      ]
+    },
+    {
+      "name": "资源包 3",
+      "resources": [
+        "k8s/60-deployment.yaml"
+      ]
+    }
+  ]
+}
