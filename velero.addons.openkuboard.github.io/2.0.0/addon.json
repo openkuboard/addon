@@ -314,6 +314,133 @@
     "context": [],
     "quickLink": []
   },
+  "initFromExisting": {
+    "label": "Velero",
+    "detect": [
+      {
+        "group": "apps",
+        "version": "v1",
+        "resource": "deployments",
+        "namespace": "",
+        "name": "velero",
+        "namespaced": true
+      }
+    ],
+    "importParams": [
+      {
+        "param": "VELERO_NAMESPACE",
+        "from": {
+          "group": "apps",
+          "version": "v1",
+          "resource": "deployments",
+          "namespace": "",
+          "name": "velero",
+          "namespaced": true
+        },
+        "jsonPath": "metadata.namespace"
+      },
+      {
+        "param": "VELERO_IMAGE_REGISTRY",
+        "from": {
+          "group": "apps",
+          "version": "v1",
+          "resource": "deployments",
+          "namespace": "{{VELERO_NAMESPACE}}",
+          "name": "velero",
+          "namespaced": true
+        },
+        "jsonPath": "spec.template.spec.containers[0].image",
+        "regex": "^(.*/)velero:[^/]+$"
+      },
+      {
+        "param": "VELERO_VERSION",
+        "from": {
+          "group": "apps",
+          "version": "v1",
+          "resource": "deployments",
+          "namespace": "{{VELERO_NAMESPACE}}",
+          "name": "velero",
+          "namespaced": true
+        },
+        "jsonPath": "spec.template.spec.containers[0].image",
+        "regex": "velero/velero:([^/]+)$"
+      },
+      {
+        "param": "VELERO_PLUGIN_AWS_VERSION",
+        "from": {
+          "group": "apps",
+          "version": "v1",
+          "resource": "deployments",
+          "namespace": "{{VELERO_NAMESPACE}}",
+          "name": "velero",
+          "namespaced": true
+        },
+        "jsonPath": "spec.template.spec.initContainers[0].image",
+        "regex": "velero-plugin-for-aws:([^/]+)$"
+      },
+      {
+        "param": "MINIO_ENDPOINT",
+        "from": {
+          "group": "velero.io",
+          "version": "v1",
+          "resource": "backupstoragelocations",
+          "namespace": "{{VELERO_NAMESPACE}}",
+          "namespaced": true
+        },
+        "jsonPath": "spec.config.s3Url"
+      },
+      {
+        "param": "MINIO_BUCKET",
+        "from": {
+          "group": "velero.io",
+          "version": "v1",
+          "resource": "backupstoragelocations",
+          "namespace": "{{VELERO_NAMESPACE}}",
+          "namespaced": true
+        },
+        "jsonPath": "spec.objectStorage.bucket"
+      },
+      {
+        "param": "MINIO_REGION",
+        "from": {
+          "group": "velero.io",
+          "version": "v1",
+          "resource": "backupstoragelocations",
+          "namespace": "{{VELERO_NAMESPACE}}",
+          "namespaced": true
+        },
+        "jsonPath": "spec.config.region"
+      },
+      {
+        "param": "MINIO_ACCESS_KEY",
+        "from": {
+          "group": "",
+          "version": "v1",
+          "resource": "secrets",
+          "namespace": "{{VELERO_NAMESPACE}}",
+          "name": "cloud-credentials",
+          "namespaced": true
+        },
+        "jsonPath": "data.cloud",
+        "base64": true,
+        "regex": "aws_access_key_id=([^\\s]+)"
+      },
+      {
+        "param": "MINIO_SECRET_KEY",
+        "from": {
+          "group": "",
+          "version": "v1",
+          "resource": "secrets",
+          "namespace": "{{VELERO_NAMESPACE}}",
+          "name": "cloud-credentials",
+          "namespaced": true
+        },
+        "jsonPath": "data.cloud",
+        "base64": true,
+        "regex": "aws_secret_access_key=([^\\s]+)"
+      }
+    ]
+  },
   "configEntry": {
     "tab": "config"
   },
