@@ -4,7 +4,7 @@
     "name": "K8S 资源监控套件",
     "version": "1.0.0",
     "lastUpdate": "2026-06-27",
-    "maintainer": "devops",
+    "maintainer": "openkuboard",
     "isGlobal": true,
     "url": "https://raw.githubusercontent.com/openkuboard/addon/main/system-monitor.addons.openkuboard.github.io/1.0.0/addon.json",
     "info": {
@@ -17,7 +17,7 @@
     "name": "存储卷浏览器",
     "version": "v3.0.1",
     "lastUpdate": "2026-06-27",
-    "maintainer": "devops",
+    "maintainer": "openkuboard",
     "isGlobal": true,
     "url": "https://raw.githubusercontent.com/openkuboard/addon/main/pv-browser.addons.openkuboard.github.io/v3.0.1/addon.json",
     "info": {

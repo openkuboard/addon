@@ -80,7 +80,7 @@ Minimal structure:
   "name": "Display Name",
   "version": "1.0.0",
   "lastUpdate": "2026-06-27",
-  "maintainer": "devops",
+  "maintainer": "openkuboard",
   "isGlobal": true,
   "scripts": ["initialize.js"],
   "k8s": ["k8s/your-resource.yaml"],

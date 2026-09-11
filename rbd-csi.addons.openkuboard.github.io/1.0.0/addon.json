@@ -3,7 +3,7 @@
   "name": "Ceph RBD CSI 驱动",
   "version": "1.0.0",
   "lastUpdate": "2026-08-29",
-  "maintainer": "devops",
+  "maintainer": "openkuboard",
   "isGlobal": true,
   "k8s": [
     "k8s/csidriver.yaml",

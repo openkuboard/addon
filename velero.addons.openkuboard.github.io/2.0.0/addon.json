@@ -3,7 +3,7 @@
   "name": "Velero 备份套件",
   "version": "2.0.0",
   "lastUpdate": "2026-09-08",
-  "maintainer": "devops",
+  "maintainer": "openkuboard",
   "k8s": [
     "k8s/00-namespace.yaml",
     "k8s/10-crds.yaml",

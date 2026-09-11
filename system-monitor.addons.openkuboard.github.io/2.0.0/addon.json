@@ -3,7 +3,7 @@
   "name": "K8S 资源监控套件",
   "version": "2.0.0",
   "lastUpdate": "2026-09-05",
-  "maintainer": "devops",
+  "maintainer": "openkuboard",
   "k8s": [
     "k8s/namespace.yaml",
     "k8s/alertmanagerConfigCustomResourceDefinition.yaml",
