@@ -11,10 +11,15 @@ import type {
   AddonEntriesResponse,
 } from '../types/entries'
 
-/** 从 localStorage 读 JWT（host 登录后写入；与 SDK authHeaders 同源） */
+// 令牌存储键名可配置：host 会把当前键名写进固定键（与 SDK 的 authHeaders 同源）。
+const AUTH_TOKEN_KEY_STORAGE = '__ok_auth_token_key__'
+const DEFAULT_AUTH_TOKEN_KEY = 'token'
+
+/** 从 localStorage 读 JWT（host 登录后写入）。 */
 function authHeaders(): Record<string, string> {
-  const token =
-    typeof localStorage !== 'undefined' ? localStorage.getItem('jwt_token') : null
+  if (typeof localStorage === 'undefined') return {}
+  const key = localStorage.getItem(AUTH_TOKEN_KEY_STORAGE) || DEFAULT_AUTH_TOKEN_KEY
+  const token = localStorage.getItem(key)
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
