@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: {{MONITOR_NAMESPACE}}
   labels:
-    devops.openkuboard.github.io/addon: system-monitor
+    k8s.openkuboard.github.io/addon: system-monitor

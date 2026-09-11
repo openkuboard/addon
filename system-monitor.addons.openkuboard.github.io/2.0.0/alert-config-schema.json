@@ -54,8 +54,8 @@
               "path": "email.from_name",
               "label": "发件人信息",
               "type": "text",
-              "placeholder": "DevOPS Alert",
-              "default": "DevOPS Alert"
+              "placeholder": "openkuboard Alert",
+              "default": "openkuboard Alert"
             }
           ]
         },

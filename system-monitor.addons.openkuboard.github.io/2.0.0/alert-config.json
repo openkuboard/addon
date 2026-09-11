@@ -8,7 +8,7 @@
     "password": "",
     "use_tls": true,
     "from": "",
-    "from_name": "DevOPS Alert"
+    "from_name": "openkuboard Alert"
   },
   "wechat": {
     "enabled": false,
