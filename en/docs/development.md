@@ -81,7 +81,7 @@ Each extension contains:
 - `extensionPoint`: target extension-point ID
 - `buttonText` / `buttonTextEn`: button labels
 - `buttonType` / `buttonIcon`: button style and icon
-- `handler`: JS executed on click (may use APIs like `KuboardProxy`, `openUrlInBlank`)
+- `handler`: JS executed on click (may use APIs like `K8sProxy`, `openUrlInBlank`)
 - `isEnabledFor`: decides whether the button is shown for a given context
 
 See the `system-monitor` addon's `addon.json` and `extensions.json` for full usage.

@@ -81,7 +81,7 @@ lang: zh
 - `extensionPoint`：目标扩展点 ID
 - `buttonText` / `buttonTextEn`：按钮文案
 - `buttonType` / `buttonIcon`：按钮样式与图标
-- `handler`：点击执行的 JS 代码（可使用 `KuboardProxy`、`openUrlInBlank` 等 API）
+- `handler`：点击执行的 JS 代码（可使用 `K8sProxy`、`openUrlInBlank` 等 API）
 - `isEnabledFor`：根据上下文决定按钮是否可用
 
 参考 `system-monitor` 套件的 `addon.json` 与 `extensions.json` 了解完整用法。
