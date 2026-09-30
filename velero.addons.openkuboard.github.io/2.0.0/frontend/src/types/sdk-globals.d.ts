@@ -84,5 +84,5 @@ interface Window {
   addonSDK?: AddonSDK
   __ADDON_ID__?: string
   __ADDON_CLUSTER_CODE__?: string
-  __DEVOPSS_BASE__?: string
+  __OPENKUBOARD_BASE__?: string
 }

@@ -85,5 +85,5 @@ interface Window {
   /** host 静默注入（与 /addon-sdk/index.js getAddonId 相同的注入模式） */
   __ADDON_ID__?: string
   __ADDON_CLUSTER_CODE__?: string
-  __DEVOPSS_BASE__?: string
+  __OPENKUBOARD_BASE__?: string
 }
