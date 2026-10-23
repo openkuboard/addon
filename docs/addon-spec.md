@@ -59,6 +59,35 @@ lang: zh
 | `installPackages` | array | 分组安装包 |
 | `quickLinks` | array | 快捷入口 |
 | `capabilities` | object | 告警 / Prometheus 规则 / 监控扩展能力声明 |
+| `ai.skills` | string[] | AI 技能文档相对路径（见下节） |
+
+## 2.1 `ai` section：AI 助手技能
+
+`ai.skills` 声明套件自带的 AI 技能文档（相对套件目录的 `.md` 路径，禁止
+`..` 穿越）。每个文件由 front matter + markdown 正文组成：
+
+```markdown
+---
+name: k8s-资源监控
+description: 查询「K8S 资源监控套件」的监控数据
+version: 1
+triggers:
+  - 监控
+  - 告警
+---
+
+（正文：教 AI 助手用什么工具、什么端点、什么典型查询来获取套件数据）
+```
+
+宿主行为：
+
+- 套件在集群上 `status=ready` 时，技能摘要（名称+触发词）自动注入该集群
+  的 AI 会话，正文经 `fetch_skill` 按需拉取；套件禁用/卸载后新会话不再注入
+  ——套件生命周期即可见性门，无需额外配置；
+- 正文应围绕宿主提供的 AI 查询工具编写（如 `list_addons` / `addon_query` /
+  `prom_query` / `get_resource`），并给出该套件 serviceUI 的典型查询端点；
+- 技能随套件分发，不进平台的技能管理页；文件缺失或解析失败按项降级跳过，
+  不影响套件其它功能。
 
 ## 3. 扩展点（extension points）
 

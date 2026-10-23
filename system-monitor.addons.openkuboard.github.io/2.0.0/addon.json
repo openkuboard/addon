@@ -576,6 +576,9 @@
     "config": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/dist/index.html#config",
     "usage": "/addons/system-monitor.addons.openkuboard.github.io@2.0.0/frontend/dist/index.html#usage"
   },
+  "ai": {
+    "skills": ["ai/skills/monitoring.md"]
+  },
   "rbac": [
     {
       "apiGroup": "",
